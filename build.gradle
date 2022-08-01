@@ -8,13 +8,36 @@ group = 'me.realimpact'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+ext {
+    mapstructVersion = "1.3.1.Final"
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'junit:junit:4.13.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('mysql:mysql-connector-java')
+    testImplementation('com.h2database:h2')
+
+    testImplementation 'io.projectreactor:reactor-test'
+
+    // lombok
+    compileOnly("org.projectlombok:lombok")
+    testCompileOnly 'org.projectlombok:lombok'
+    annotationProcessor("org.projectlombok:lombok")
+
+    // mapstruct
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+
+    compileOnly "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 }
 
 tasks.named('test') {
