@@ -7,9 +7,8 @@ logging:
         sql: INFO
     org:
       hibernate:
-        type:
-          descriptor:
-            sql: INFO
+        SQL: INFO
+        type: INFO
 
 spring:
   jpa:

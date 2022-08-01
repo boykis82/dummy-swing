@@ -1,33 +1,39 @@
 package me.realimpact.dummy.swing.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import me.realimpact.dummy.swing.domain.converter.BooleanToYNConverter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
+import javax.persistence.Id;
+import javax.persistence.Version;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
+@Getter
 @Entity
-@Data
-public class Product {
+@Table(
+    name = "zprd_prod"
+)
+public class Product extends BaseEntity {
   @Id
   @Column(name = "prod_id")
-  private String id;
+  private String prodId;
 
   @Version
   private Integer version;
 
-  @Column(nullable = false)
+  @Column(nullable = false, name = "prod_nm")
   private String prodNm;
 
   @Convert(converter = BooleanToYNConverter.class)
+  @Column(name = "mbl_phone_linked_dc_yn")
   private boolean isMobilePhoneLinkedDiscountTarget;
 
+  @Builder
   public Product(String prodId, String prodNm, boolean isMobilePhoneLinkedDiscountTarget) {
-    this.id = prodId;
+    this.prodId = prodId;
     this.prodNm = prodNm;
     this.isMobilePhoneLinkedDiscountTarget = isMobilePhoneLinkedDiscountTarget;
   }

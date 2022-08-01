@@ -37,7 +37,7 @@ public class MobilePhoneResponseDto {
         .svcMgmtNum(svc.getSvcMgmtNum())
         .svcNum(svc.getSvcNum())
         .svcScrbDt(svc.getSvcScrbDt())
-        .feeProdID(svc.getFeeProduct().getId())
+        .feeProdID(svc.getFeeProduct().getProdId())
         .feeProdNm(svc.getFeeProduct().getProdNm())
         .isMobilePhoneLinkedDiscountTarget(svc.getFeeProduct().isMobilePhoneLinkedDiscountTarget())
         .build();

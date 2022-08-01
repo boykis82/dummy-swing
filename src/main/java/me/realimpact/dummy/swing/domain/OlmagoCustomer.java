@@ -1,19 +1,19 @@
 package me.realimpact.dummy.swing.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
+import javax.persistence.Id;
+import javax.persistence.Version;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@NoArgsConstructor
 @Entity
-@Data
 @Table(
     name = "zord_olmago_cust",
     indexes = @Index(name = "i_cust", columnList = "swing_cust_num", unique = true)
 )
-public class OlmagoCustomer {
+public class OlmagoCustomer extends BaseEntity {
   @Id
   @Column(name = "olmago_cust_id")
   private long olmagoCustId;

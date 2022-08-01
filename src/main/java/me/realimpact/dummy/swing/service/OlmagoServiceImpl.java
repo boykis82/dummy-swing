@@ -1,5 +1,6 @@
 package me.realimpact.dummy.swing.service;
 
+import me.realimpact.dummy.swing.Util;
 import me.realimpact.dummy.swing.domain.*;
 import me.realimpact.dummy.swing.dto.ReqRelSvcAndOlmagoCustDto;
 import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
@@ -34,23 +35,23 @@ public class OlmagoServiceImpl implements OlmagoService {
   
   @Override
   @Transactional
-  public void linkOlmagoCustomerWithMobilePhoneService(ReqRelSvcAndOlmagoCustDto reqRelSvcAndOlmagoCustDto) {
-    MobilePhoneService mobilePhoneService = serviceRepository.findById(reqRelSvcAndOlmagoCustDto.getSvcMgmtNum())
+  public void linkOlmagoCustomerWithMobilePhoneService(ReqRelSvcAndOlmagoCustDto dto) {
+    MobilePhoneService mobilePhoneService = serviceRepository.findById(dto.getSvcMgmtNum())
         .orElseThrow(() -> new RuntimeException("주어진 서비스관리번호로 서비스가 존재하지 않습니다!"));
-    OlmagoCustomer olmagoCustomer = olmagoCustomerRepository.findById(reqRelSvcAndOlmagoCustDto.getOlmagoCustomerId())
-            .orElseGet(() -> createOlmagoCustomer(mobilePhoneService, reqRelSvcAndOlmagoCustDto.getOlmagoCustomerId()));
+    OlmagoCustomer olmagoCustomer = olmagoCustomerRepository.findById(dto.getOlmagoCustomerId())
+            .orElseGet(() -> createOlmagoCustomer(mobilePhoneService, dto.getOlmagoCustomerId()));
     
-    if (svcOlmagoCustRelHstRepository.findActiveHistoryByServiceOrOlmagoCustomer(mobilePhoneService, olmagoCustomer).size() > 0) {
+    if (svcOlmagoCustRelHstRepository.findRelationHistoryByServiceOrOlmagoCustomer(mobilePhoneService, olmagoCustomer, Util.LocalDateTimeMax).size() > 0) {
       throw new RuntimeException("유효한 서비스-얼마고 고객 관계이력이 존재합니다! 먼저 연결을 끊어주세요!");
     }
   
     ServiceOlmagoCustomerRelationHistory socrh =
-        ServiceOlmagoCustomerRelationHistory.newHistory(mobilePhoneService, olmagoCustomer, reqRelSvcAndOlmagoCustDto.getEventDateTime());
+        ServiceOlmagoCustomerRelationHistory.newHistory(mobilePhoneService, olmagoCustomer, dto.getEventDateTime());
     svcOlmagoCustRelHstRepository.save(socrh);
   }
   
-  private OlmagoCustomer createOlmagoCustomer(MobilePhoneService mobilePhoneService, long olmagoCustomerId) {
-    Customer swingCustomer = mobilePhoneService.getCustomer();
+  private OlmagoCustomer createOlmagoCustomer(MobilePhoneService service, long olmagoCustomerId) {
+    Customer swingCustomer = service.getCustomer();
     OlmagoCustomer olmagoCustomer = OlmagoCustomer.builder()
         .swingCustomer(swingCustomer)
         .olmagoCustId(olmagoCustomerId)
@@ -60,16 +61,17 @@ public class OlmagoServiceImpl implements OlmagoService {
   
   @Override
   @Transactional
-  public void unlinkOlmagoCustomerWithMobilePhoneService(ReqRelSvcAndOlmagoCustDto reqRelSvcAndOlmagoCustDto) {
-    MobilePhoneService mobilePhoneService = serviceRepository.findById(reqRelSvcAndOlmagoCustDto.getSvcMgmtNum())
+  public void unlinkOlmagoCustomerWithMobilePhoneService(ReqRelSvcAndOlmagoCustDto dto) {
+    MobilePhoneService mobilePhoneService = serviceRepository.findById(dto.getSvcMgmtNum())
         .orElseThrow(() -> new RuntimeException("주어진 서비스관리번호로 서비스가 존재하지 않습니다!"));
-    OlmagoCustomer olmagoCustomer = olmagoCustomerRepository.findById(reqRelSvcAndOlmagoCustDto.getOlmagoCustomerId())
+    OlmagoCustomer olmagoCustomer = olmagoCustomerRepository.findById(dto.getOlmagoCustomerId())
         .orElseThrow(() -> new RuntimeException("주어진 얼마고 고객ID가 존재하지 않습니다!"));
   
     ServiceOlmagoCustomerRelationHistory socrh =
-        svcOlmagoCustRelHstRepository.findActiveHistoryByServiceAndOlmagoCustomer(mobilePhoneService, olmagoCustomer)
+        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(mobilePhoneService, olmagoCustomer, Util.LocalDateTimeMax)
             .orElseThrow(() -> new RuntimeException("주어진 서비스관리번호-얼마고고객ID로 유효한 이력이 존재하지 않습니다!"));
   
-    socrh.terminate(reqRelSvcAndOlmagoCustDto.getEventDateTime());
+    socrh.terminate(dto.getEventDateTime());
+    svcOlmagoCustRelHstRepository.save(socrh);
   }
 }

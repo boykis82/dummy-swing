@@ -1,37 +1,49 @@
 package me.realimpact.dummy.swing.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
+import javax.persistence.Id;
+import javax.persistence.Version;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@NoArgsConstructor
+@Getter
 @Entity
-@Data
 @Table(
     name = "zord_cust",
     indexes = @Index(name = "i_ci", columnList = "ci", unique = true)
 )
-public class Customer {
+public class Customer extends BaseEntity {
   @Id
-  @Column(name = "svc_mgmt_num")
+  @Column(name = "cust_num")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long custNum;
-
+  
   @Version
   private Integer version;
+  
+  @Column(nullable = false, name = "cust_nm")
+  private String custNm;
 
-  @Column(nullable = false)
+  @Column(nullable = false, name = "ci")
   private String ci;
   
-  @Column(nullable = false)
+  @Column(nullable = false, name = "birth_dt")
   private LocalDate birthDt;
 
   @Builder
-  public Customer(String ci, LocalDate birthDt) {
+  private Customer(String ci, String custNm, LocalDate birthDt) {
     this.ci = ci;
+    this.custNm = custNm;
     this.birthDt = birthDt;
   }
 
+  public static Customer register(String ci, String custNm, LocalDate birthDt) {
+    return Customer.builder()
+        .ci(ci)
+        .custNm(custNm)
+        .birthDt(birthDt)
+        .build();
+  }
 }

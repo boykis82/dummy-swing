@@ -1,19 +1,19 @@
 package me.realimpact.dummy.swing.domain;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
+import javax.persistence.Id;
+import javax.persistence.Version;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Entity
-@Data
 @Table(
     name = "zord_svc_olmago_cust_rel_hst",
-    indexes = @Index(name = "i_svc_olmago_cust", columnList = "mobilePhoneService, olmagoCustomer, effEndDtm DESC", unique = true)
+    indexes = @Index(name = "i_svc_olmago_cust", columnList = "svc_mgmt_num, olmago_cust_id, eff_end_dtm DESC", unique = true)
 )
-public class ServiceOlmagoCustomerRelationHistory {
+public class ServiceOlmagoCustomerRelationHistory extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -21,10 +21,10 @@ public class ServiceOlmagoCustomerRelationHistory {
   @Version
   private Integer version;
 
-  @Column(nullable = false)
+  @Column(nullable = false, name = "eff_sta_dtm")
   LocalDateTime effStaDtm;
 
-  @Column(nullable = false)
+  @Column(nullable = false, name = "eff_end_dtm")
   LocalDateTime effEndDtm;
 
   @ManyToOne
