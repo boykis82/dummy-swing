@@ -1,6 +1,6 @@
 package me.realimpact.dummy.swing.web;
 
-import me.realimpact.dummy.swing.dto.RequestOlmagoCustomerRelationDto;
+import me.realimpact.dummy.swing.dto.ReqRelSvcAndOlmagoCustDto;
 import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class OlmagoController {
   @PostMapping("/{svc-mgmt-num}/linked-olmago-customer")
   public void linkOlmagoCustomerWithMobilePhoneService(
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
-      @RequestBody RequestOlmagoCustomerRelationDto requestOlmagoCustomerRelationDto
+      @RequestBody ReqRelSvcAndOlmagoCustDto requestOlmagoCustomerRelationDto
   ) {
 
   }
@@ -26,7 +26,7 @@ public class OlmagoController {
   @DeleteMapping("/{svc-mgmt-num}/linked-olmago-customer")
   public void unlinkOlmagoCustomerWithMobilePhoneService(
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
-      @RequestBody RequestOlmagoCustomerRelationDto requestOlmagoCustomerRelationDto
+      @RequestBody ReqRelSvcAndOlmagoCustDto requestOlmagoCustomerRelationDto
   ) {
 
   }

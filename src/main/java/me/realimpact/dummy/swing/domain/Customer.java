@@ -1,21 +1,17 @@
-package me.realimpact.dummy.swing.persistence;
+package me.realimpact.dummy.swing.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Table(
     name = "zord_cust",
-    indexes = @Index(name = "i_ci", columnList = "ci")
+    indexes = @Index(name = "i_ci", columnList = "ci", unique = true)
 )
 public class Customer {
   @Id
@@ -28,10 +24,14 @@ public class Customer {
 
   @Column(nullable = false)
   private String ci;
+  
+  @Column(nullable = false)
+  private LocalDate birthDt;
 
   @Builder
-  public Customer(String ci) {
+  public Customer(String ci, LocalDate birthDt) {
     this.ci = ci;
+    this.birthDt = birthDt;
   }
 
 }

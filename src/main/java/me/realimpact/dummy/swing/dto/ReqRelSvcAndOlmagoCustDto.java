@@ -1,11 +1,12 @@
 package me.realimpact.dummy.swing.dto;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
-public class RequestOlmagoCustomerRelationDto {
+@Data
+public class ReqRelSvcAndOlmagoCustDto {
+  private long svcMgmtNum;
   private long olmagoCustomerId;
   private LocalDateTime eventDateTime;
 }

@@ -1,18 +1,17 @@
-package me.realimpact.dummy.swing.persistence;
+package me.realimpact.dummy.swing.domain;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import me.realimpact.dummy.swing.persistence.converter.BooleanToYNConverter;
+import me.realimpact.dummy.swing.domain.converter.BooleanToYNConverter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class Product {
   @Id
   @Column(name = "prod_id")
@@ -27,11 +26,7 @@ public class Product {
   @Convert(converter = BooleanToYNConverter.class)
   private boolean isMobilePhoneLinkedDiscountTarget;
 
-  public Product(
-      String prodId,
-      String prodNm,
-      boolean isMobilePhoneLinkedDiscountTarget
-  ) {
+  public Product(String prodId, String prodNm, boolean isMobilePhoneLinkedDiscountTarget) {
     this.id = prodId;
     this.prodNm = prodNm;
     this.isMobilePhoneLinkedDiscountTarget = isMobilePhoneLinkedDiscountTarget;
