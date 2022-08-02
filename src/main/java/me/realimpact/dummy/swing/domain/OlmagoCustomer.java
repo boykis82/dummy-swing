@@ -5,9 +5,9 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @NoArgsConstructor
+@Getter
 @Entity
 @Table(
     name = "zord_olmago_cust",

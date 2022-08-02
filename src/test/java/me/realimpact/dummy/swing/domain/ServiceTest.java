@@ -1,6 +1,6 @@
 package me.realimpact.dummy.swing.domain;
 
-import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
+import me.realimpact.dummy.swing.Fixtures;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,15 +25,16 @@ public class ServiceTest {
   
   @Autowired
   ProductRepository productRepository;
-  
+
+  List<Customer> customers;
+  List<Product> products;
+  List<MobilePhoneService> services;
+
   @Before
   public void setUp() {
-    customerRepository.save(
-        Customer.register("11111", "강인수", LocalDate.of(1982,1,1))
-    );
-    productRepository.save(
-        Product.builder().prodId("NA00000001").prodNm("라지").isMobilePhoneLinkedDiscountTarget(true).build()
-    );
+    customers = customerRepository.saveAll(Fixtures.createManyCustomers());
+    products = productRepository.saveAll(Fixtures.createManyProducts());
+    services = serviceRepository.saveAll(Fixtures.createManyServices(customers, products));
   }
   
   @After
@@ -43,16 +45,23 @@ public class ServiceTest {
   }
   
   @Test
-  public void subscribe() {
-    Customer customer = customerRepository.findByCI("11111").get();
-    Product product = productRepository.findById("NA00000001").get();
-  
-    serviceRepository.save(
-        MobilePhoneService.subscribe(customer, "1", LocalDate.now(), product)
-    );
-    
-    assertThat(
-        serviceRepository.findById(1L).isPresent()
-    ).isTrue();
+  public void findByCI_serviceNotExisted() {
+    assertThat(serviceRepository.findByCI("77777777777777777777")).isEmpty();
+  }
+
+  @Test
+  public void findByCI_oneServiceExisted() {
+    List<MobilePhoneService> servicesFoundByCI = serviceRepository.findByCI("22222222222222222222");
+    assertThat(servicesFoundByCI).hasSize(1);
+    MobilePhoneService foundService = servicesFoundByCI.get(0);
+    assertThat(foundService.getSvcNum()).isEqualTo("3");
+    assertThat(foundService.getCustomer().getCi()).isEqualTo("22222222222222222222");
+    assertThat(foundService.getFeeProduct().getProdId()).isEqualTo("NA00000002");
+  }
+
+  @Test
+  public void findByCI_manyServiceExisted() {
+    List<MobilePhoneService> servicesFoundByCI = serviceRepository.findByCI("33333333333333333333");
+    assertThat(servicesFoundByCI).hasSize(4);
   }
 }

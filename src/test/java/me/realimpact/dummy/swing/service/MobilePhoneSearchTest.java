@@ -43,9 +43,9 @@ public class MobilePhoneSearchTest {
   
   @After
   public void tearDown() {
+    serviceRepository.deleteAll();
     productRepository.deleteAll();
     customerRepository.deleteAll();
-    serviceRepository.deleteAll();
   }
   
   @Test

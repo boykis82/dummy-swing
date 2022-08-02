@@ -1,6 +1,8 @@
 package me.realimpact.dummy.swing.domain;
 
 import lombok.*;
+import me.realimpact.dummy.swing.Util;
+
 import javax.persistence.Id;
 import javax.persistence.Version;
 
@@ -8,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
+@Getter
 @Entity
 @Table(
     name = "zord_svc_olmago_cust_rel_hst",
@@ -44,7 +47,7 @@ public class ServiceOlmagoCustomerRelationHistory extends BaseEntity {
     this.mobilePhoneService = mobilePhoneService;
     this.olmagoCustomer = olmagoCustomer;
     this.effStaDtm = effStaDtm;
-    this.effEndDtm = LocalDateTime.MAX;
+    this.effEndDtm = Util.LocalDateTimeMax;
   }
 
   public static ServiceOlmagoCustomerRelationHistory newHistory(
@@ -68,7 +71,7 @@ public class ServiceOlmagoCustomerRelationHistory extends BaseEntity {
   }
 
   public boolean isActiveHistory() {
-    return effEndDtm.isEqual(LocalDateTime.MAX);
+    return effEndDtm.isEqual(Util.LocalDateTimeMax);
   }
 
 }
