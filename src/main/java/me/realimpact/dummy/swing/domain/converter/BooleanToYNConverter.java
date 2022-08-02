@@ -1,4 +1,4 @@
-package me.realimpact.dummy.swing.persistence.converter;
+package me.realimpact.dummy.swing.domain.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
