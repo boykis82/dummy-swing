@@ -29,14 +29,14 @@ public class OlmagoCustomerTest {
   @Before
   public void setUp() {
     swingCustomer1 = customerRepository.save(
-        Customer.register("11111", "강인수", LocalDate.of(1982,1,1))
+        Customer.newCustomer("11111", "강인수", LocalDate.of(1982,1,1))
     );
     olmagoCustomerRepository.save(
         OlmagoCustomer.builder().olmagoCustId(5).swingCustomer(swingCustomer1).build()
     );
 
     swingCustomer2 = customerRepository.save(
-        Customer.register("22222", "김범수", LocalDate.of(1996,1,1))
+        Customer.newCustomer("22222", "김범수", LocalDate.of(1996,1,1))
     );
   }
 

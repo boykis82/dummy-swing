@@ -5,12 +5,13 @@ import me.realimpact.dummy.swing.domain.*;
 import me.realimpact.dummy.swing.dto.ReqRelSvcAndOlmagoCustDto;
 import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@org.springframework.stereotype.Service
+@Service
 public class OlmagoServiceImpl implements OlmagoService {
   @Autowired
   MobilePhoneServiceRepository serviceRepository;

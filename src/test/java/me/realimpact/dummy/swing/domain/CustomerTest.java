@@ -22,7 +22,7 @@ public class CustomerTest {
   @Before
   public void setUp() {
     customerRepository.save(
-      Customer.register("11111", "강인수", LocalDate.of(1982,1,1))
+      Customer.newCustomer("11111", "강인수", LocalDate.of(1982,1,1))
     );
   }
   
@@ -32,24 +32,24 @@ public class CustomerTest {
   }
   
   @Test
-  public void findByCI_notExisted() {
+  public void findByCI_notExisted_shouldBeEmpty() {
     assertThat(customerRepository.findByCI("00000")).isEmpty();
   }
   
   @Test
-  public void findByCI_existed() {
+  public void findByCI_existed_shouldReturnOneCustomer() {
     Optional<Customer> customer = customerRepository.findByCI("11111");
     assertThat(customer).isPresent();
     assertThat(customer.get().getCustNm()).isEqualTo("강인수");
   }
   
   @Test
-  public void findByCI_inManyCustomers() {
+  public void findByCI_inManyCustomers_shouldReturnOneCustomer() {
     customerRepository.save(
-        Customer.register("22222", "황치훈", LocalDate.of(1982,11,1))
+        Customer.newCustomer("22222", "황치훈", LocalDate.of(1982,11,1))
     );
     customerRepository.save(
-        Customer.register("33333", "김선혁", LocalDate.of(1986,8,8))
+        Customer.newCustomer("33333", "김선혁", LocalDate.of(1986,8,8))
     );
     
     Optional<Customer> customer = customerRepository.findByCI("22222");

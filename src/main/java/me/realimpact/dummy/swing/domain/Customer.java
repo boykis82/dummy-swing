@@ -39,7 +39,7 @@ public class Customer extends BaseEntity {
     this.birthDt = birthDt;
   }
 
-  public static Customer register(String ci, String custNm, LocalDate birthDt) {
+  public static Customer newCustomer(String ci, String custNm, LocalDate birthDt) {
     return Customer.builder()
         .ci(ci)
         .custNm(custNm)
