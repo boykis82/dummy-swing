@@ -2,6 +2,7 @@ package me.realimpact.dummy.swing.web;
 
 import me.realimpact.dummy.swing.dto.ReqRelSvcAndOlmagoCustDto;
 import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
+import me.realimpact.dummy.swing.dto.SvcAndOlmagoRelationResponseDto;
 import me.realimpact.dummy.swing.service.OlmagoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +22,18 @@ public class OlmagoController {
   }
 
   @PostMapping("/{svc-mgmt-num}/linked-olmago-customer")
-  public ResponseEntity<Void> linkOlmagoCustomerWithMobilePhoneService(
+  public ResponseEntity<SvcAndOlmagoRelationResponseDto> linkOlmagoCustomerWithMobilePhoneService(
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody ReqRelSvcAndOlmagoCustDto reqRelSvcAndOlmagoCustDto
   ) {
-    olmagoService.linkOlmagoCustomerWithMobilePhoneService(reqRelSvcAndOlmagoCustDto);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok().body(olmagoService.linkOlmagoCustomerWithMobilePhoneService(reqRelSvcAndOlmagoCustDto));
   }
 
   @DeleteMapping("/{svc-mgmt-num}/linked-olmago-customer")
-  public ResponseEntity<Void> unlinkOlmagoCustomerWithMobilePhoneService(
+  public ResponseEntity<SvcAndOlmagoRelationResponseDto> unlinkOlmagoCustomerWithMobilePhoneService(
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody ReqRelSvcAndOlmagoCustDto reqRelSvcAndOlmagoCustDto
   ) {
-    olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(reqRelSvcAndOlmagoCustDto);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok().body(olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(reqRelSvcAndOlmagoCustDto));
   }
 }

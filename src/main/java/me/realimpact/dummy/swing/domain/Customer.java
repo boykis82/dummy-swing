@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 @Table(
     name = "zord_cust",
