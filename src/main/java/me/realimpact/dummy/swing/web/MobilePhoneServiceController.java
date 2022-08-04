@@ -12,19 +12,13 @@ import org.springframework.web.bind.annotation.*;
 public class MobilePhoneServiceController {
   @Autowired
   MobilePhoneServiceService mobilePhoneServiceService;
-  
-  @Autowired
-  OlmagoClient olmagoClient;
-  
+
   @PutMapping("/{svc-mgmt-num}/owner-customer")
   public ResponseEntity<Void> changeOwner(
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody ChangeOwnerRequestDto reqDto
   ) {
-    ChangeOwnerResponseDto resDto = mobilePhoneServiceService.changeOwner(reqDto);
-    if (resDto.getBfOlmagoCustomerId() > 0L) {
-      olmagoClient.unlinkMobilePhoneService(resDto.getBfOlmagoCustomerId(), resDto.getSvcMgmtNum());
-    }
+    mobilePhoneServiceService.changeOwner(reqDto);
     return ResponseEntity.ok().build();
   }
   
@@ -33,10 +27,7 @@ public class MobilePhoneServiceController {
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody TerminateRequestDto reqDto
   ) {
-    TerminateResponseDto resDto = mobilePhoneServiceService.terminate(reqDto);
-    if (resDto.getOlmagoCustomerId() > 0L) {
-      olmagoClient.unlinkMobilePhoneService(resDto.getOlmagoCustomerId(), resDto.getSvcMgmtNum());
-    }
+    mobilePhoneServiceService.terminate(reqDto);
     return ResponseEntity.ok().build();
   }
   
@@ -45,12 +36,7 @@ public class MobilePhoneServiceController {
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody ChangeFeeProductRequestDto reqDto
   ) {
-    ChangeFeeProductResponseDto resDto = mobilePhoneServiceService.changeFeeProduct(reqDto);
-    if (resDto.getMobilePhoneProductTierChangeType() == ChangeFeeProductResponseDto.ProductTierChangeType.UP) {
-      olmagoClient.applyMobilePhoneLinkedDiscount(resDto.getOlmagoCustomerId(), resDto.getSvcMgmtNum());
-    } else if (resDto.getMobilePhoneProductTierChangeType() == ChangeFeeProductResponseDto.ProductTierChangeType.DOWN) {
-      olmagoClient.cancelMobilePhoneLinkedDiscount(resDto.getOlmagoCustomerId(), resDto.getSvcMgmtNum());
-    }
+    mobilePhoneServiceService.changeFeeProduct(reqDto);
     return ResponseEntity.ok().build();
   }
 }
