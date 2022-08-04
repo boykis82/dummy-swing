@@ -1,9 +1,7 @@
 package me.realimpact.dummy.swing;
 
 import me.realimpact.dummy.swing.domain.*;
-import me.realimpact.dummy.swing.domain.MobilePhoneService.MobilePhoneServiceBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,6 +36,15 @@ public class Fixtures {
             MobilePhoneService.subscribe(customers.get(2), "5", LocalDate.of(2004,1,1), products.get(3)),
             MobilePhoneService.subscribe(customers.get(2), "6", LocalDate.of(2005,1,1), products.get(1)),
             MobilePhoneService.subscribe(customers.get(2), "7", LocalDate.of(2006,1,1), products.get(0))
+    );
+  }
+  
+  public static List<MobilePhoneResponseDto> createManyMobilePhoneResponseDtos() {
+    return List.of(
+        MobilePhoneResponseDto.builder().svcMgmtNum(1L).svcNum("1").svcScrbDt(LocalDate.of(2000,1,5)).isMobilePhoneLinkedDiscountTarget(true).feeProdID("NA00000001").feeProdNm("플래티넘").build(),
+        MobilePhoneResponseDto.builder().svcMgmtNum(2L).svcNum("2").svcScrbDt(LocalDate.of(2010,2,1)).isMobilePhoneLinkedDiscountTarget(true).feeProdID("NA00000002").feeProdNm("라지").build(),
+        MobilePhoneResponseDto.builder().svcMgmtNum(3L).svcNum("3").svcScrbDt(LocalDate.of(2020,5,5)).isMobilePhoneLinkedDiscountTarget(false).feeProdID("NA00000003").feeProdNm("스몰").build(),
+        MobilePhoneResponseDto.builder().svcMgmtNum(4L).svcNum("4").svcScrbDt(LocalDate.of(2015,4,3)).isMobilePhoneLinkedDiscountTarget(false).feeProdID("NA00000004").feeProdNm("미니").build()
     );
   }
 }

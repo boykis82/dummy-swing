@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/swing/api/v1/mobilephones")
+@RequestMapping("/swing/api/v1/mobile-phones")
 public class OlmagoController {
   @Autowired
   private OlmagoService olmagoService;
