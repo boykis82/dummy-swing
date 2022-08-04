@@ -3,23 +3,19 @@ package me.realimpact.dummy.swing.service;
 import me.realimpact.dummy.swing.Fixtures;
 import me.realimpact.dummy.swing.domain.*;
 import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
-import org.assertj.core.groups.Tuple;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.util.Pair;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -29,12 +25,6 @@ import static org.mockito.BDDMockito.given;
 public class MobilePhoneSearchTest {
   @Autowired
   OlmagoService olmagoService;
-  
-  @MockBean
-  CustomerRepository customerRepository;
-  
-  @MockBean
-  ProductRepository productRepository;
   
   @MockBean
   MobilePhoneServiceRepository serviceRepository;

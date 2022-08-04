@@ -1,11 +1,13 @@
 package me.realimpact.dummy.swing.domain;
 
 import lombok.*;
+
 import javax.persistence.Id;
 import javax.persistence.Version;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -59,5 +61,17 @@ public class MobilePhoneService extends BaseEntity {
         .svcScrbDt(svcScrbDt)
         .feeProduct(feeProduct)
         .build();
+  }
+  
+  public void terminate(LocalDateTime termDtm) {
+    svcTermDt = termDtm.toLocalDate();
+  }
+  
+  public boolean validateCustomer(long custNum) {
+    return customer.getCustNum() == custNum;
+  }
+  
+  public boolean validateProduct(String prodId) {
+    return feeProduct.getProdId().equals(prodId);
   }
 }

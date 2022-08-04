@@ -32,19 +32,19 @@ public class CustomerTest {
   }
   
   @Test
-  public void findByCI_notExisted_shouldBeEmpty() {
+  public void givenNotExistedCi_whenFindByCI_thenShouldBeEmpty() {
     assertThat(customerRepository.findByCI("00000")).isEmpty();
   }
   
   @Test
-  public void findByCI_existed_shouldReturnOneCustomer() {
+  public void givenExistedCi_whenFindByCI_thenShouldReturnOneCustomer() {
     Optional<Customer> customer = customerRepository.findByCI("11111");
     assertThat(customer).isPresent();
     assertThat(customer.get().getCustNm()).isEqualTo("강인수");
   }
   
   @Test
-  public void findByCI_inManyCustomers_shouldReturnOneCustomer() {
+  public void givenManyCustomersAndExistedCi_whenfindByCI_shouldReturnOneCustomer() {
     customerRepository.save(
         Customer.newCustomer("22222", "황치훈", LocalDate.of(1982,11,1))
     );

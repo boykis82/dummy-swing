@@ -26,9 +26,6 @@ public class OlmagoServiceImpl implements OlmagoService {
   @Autowired
   ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository;
   
-  @Autowired
-  CustomerRepository customerRepository;
-  
   @Override
   @Transactional(readOnly = true)
   public List<MobilePhoneResponseDto> getServicesByCI(String ci) {
@@ -82,13 +79,13 @@ public class OlmagoServiceImpl implements OlmagoService {
       2. 서비스, 얼마고고객 관계가 없으면 오류
       3. 기존 이력 종료하고 저장
      */    
-    MobilePhoneService mobilePhoneService = serviceRepository.findById(dto.getSvcMgmtNum())
+    MobilePhoneService mobilePhoneServiceService = serviceRepository.findById(dto.getSvcMgmtNum())
         .orElseThrow(() -> new BusinessException(SERVICE_NOT_FOUND_BY_EXT_REF, dto.getSvcMgmtNum()));
     OlmagoCustomer olmagoCustomer = olmagoCustomerRepository.findById(dto.getOlmagoCustomerId())
         .orElseThrow(() -> new BusinessException(CUSTOMER_NOT_FOUND_BY_EXT_REF, dto.getOlmagoCustomerId()));
   
     ServiceOlmagoCustomerRelationHistory socrh =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(mobilePhoneService, olmagoCustomer, Util.LocalDateTimeMax)
+        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(mobilePhoneServiceService, olmagoCustomer, Util.LocalDateTimeMax)
             .orElseThrow(() -> new BusinessException(SERVICE_OLMAGO_RELATION_NOT_EXISTED, dto.getSvcMgmtNum(), dto.getOlmagoCustomerId()));
   
     socrh.terminate(dto.getEventDateTime());

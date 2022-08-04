@@ -47,12 +47,12 @@ public class OlmagoCustomerTest {
   }
 
   @Test
-  public void findByCustomer_notMappedWithOlmagoCustomer_shouldReturnNull() {
+  public void givenCustomerNotMappedWithOlmagoCustomer_whenFindBySwingCustomer_shouldReturnNull() {
     assertThat(olmagoCustomerRepository.findBySwingCustomer(swingCustomer2)).isEmpty();
   }
 
   @Test
-  public void findByCustomer_mappedWithOlmagoCustomer_shouldReturn() {
+  public void givenCustomerMappedWithOlmagoCustomer_whenFindBySwingCustomer_shouldReturnOneCustomer() {
     Optional<OlmagoCustomer> olmagoCustomerOpt =
         olmagoCustomerRepository.findBySwingCustomer(swingCustomer1);
     assertThat(olmagoCustomerOpt).isPresent();
