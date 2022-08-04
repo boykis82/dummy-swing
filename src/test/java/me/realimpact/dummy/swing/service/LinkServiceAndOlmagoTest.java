@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
@@ -90,14 +91,19 @@ public class LinkServiceAndOlmagoTest {
      3-3. 기존 릴레이션 미존재 -> 정상
    */
   
-  @Test(expected = BusinessException.class)
+  @Test
   public void link_notExistedService_shouldThrowException() {
     given( serviceRepository.findById(1L) )
         .willReturn( Optional.empty() );
   
     ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L);
-    olmagoService.linkOlmagoCustomerWithMobilePhoneService(dto);
-    fail("앞에서 exception 발생해야 함");
+    
+    try {
+      olmagoService.linkOlmagoCustomerWithMobilePhoneService(dto);
+      fail("앞에서 exception 발생해야 함");
+    } catch (BusinessException e) {
+      assertThat(e.getHttpStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Test
@@ -119,7 +125,7 @@ public class LinkServiceAndOlmagoTest {
     assertThat(resDto.getOlmagoCustomerId()).isEqualTo(testOlmagoCust.getOlmagoCustId());
   }
   
-  @Test(expected = BusinessException.class)
+  @Test
   public void link_olmagoCustomerExisted_relationExisted_sameCustomer_shouldThrowException() {
     given( serviceRepository.findById(testSvc.getSvcMgmtNum()) )
         .willReturn( Optional.of(testSvc) );
@@ -129,8 +135,12 @@ public class LinkServiceAndOlmagoTest {
         .willReturn( Collections.singletonList(testSocrh) );
   
     ReqRelSvcAndOlmagoCustDto reqDto = buildReqRelSvcAndOlmagoCustDto(testSvc.getSvcMgmtNum(), testOlmagoCust.getOlmagoCustId());
-    olmagoService.linkOlmagoCustomerWithMobilePhoneService(reqDto);
-    fail("앞에서 exception 발생해야 함");
+    try {
+      olmagoService.linkOlmagoCustomerWithMobilePhoneService(reqDto);
+      fail("앞에서 exception 발생해야 함");
+    } catch (BusinessException e) {
+      assertThat(e.getHttpStatus()).isEqualTo(HttpStatus.CONFLICT);
+    }
   }
   
   @Test
@@ -150,7 +160,7 @@ public class LinkServiceAndOlmagoTest {
     assertThat(resDto.getOlmagoCustomerId()).isEqualTo(testOlmagoCust.getOlmagoCustId());
   }
   
-  @Test(expected = BusinessException.class)
+  @Test
   public void link_olmagoCustomerExisted_diffCustomer_shouldThrowException() {
     given( serviceRepository.findById(testSvc.getSvcMgmtNum()) )
         .willReturn( Optional.of(testSvc) );
@@ -158,8 +168,12 @@ public class LinkServiceAndOlmagoTest {
         .willReturn( Optional.of(testOlmagoCust2) );
   
     ReqRelSvcAndOlmagoCustDto reqDto = buildReqRelSvcAndOlmagoCustDto(testSvc.getSvcMgmtNum(), testOlmagoCust2.getOlmagoCustId());
-    olmagoService.linkOlmagoCustomerWithMobilePhoneService(reqDto);
-    fail("앞에서 exception 발생해야 함");
+    try {
+      olmagoService.linkOlmagoCustomerWithMobilePhoneService(reqDto);
+      fail("앞에서 exception 발생해야 함");
+    } catch (BusinessException e) {
+      assertThat(e.getHttpStatus()).isEqualTo(HttpStatus.PRECONDITION_FAILED);
+    }
   }
   
   /* TODO
@@ -168,17 +182,21 @@ public class LinkServiceAndOlmagoTest {
   3. 기존 릴레이션(서비스 또는 얼마고고객) 미존재 -> 오류
   4. 기존 릴레이션 존재 -> 정상
    */
-  @Test(expected = BusinessException.class)
+  @Test
   public void unlink_notExistedService_shouldThrowException() {
     given( serviceRepository.findById(testSvc.getSvcMgmtNum()) )
         .willReturn( Optional.empty() );
   
     ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(testSvc.getSvcMgmtNum(), 2L);
-    olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(dto);
-    fail("앞에서 exception 발생해야 함");
+    try {
+      olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(dto);
+      fail("앞에서 exception 발생해야 함");
+    } catch (BusinessException e) {
+      assertThat(e.getHttpStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
   }
   
-  @Test(expected = BusinessException.class)
+  @Test
   public void unlink_notExistedOlmagoCustomer_shouldThrowException() {
     given( serviceRepository.findById(testSvc.getSvcMgmtNum()) )
         .willReturn( Optional.of(testSvc) );
@@ -186,11 +204,15 @@ public class LinkServiceAndOlmagoTest {
         .willReturn( Optional.empty() );
   
     ReqRelSvcAndOlmagoCustDto reqDto = buildReqRelSvcAndOlmagoCustDto(testSvc.getSvcMgmtNum(), testOlmagoCust.getOlmagoCustId());
-    olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(reqDto);
-    fail("앞에서 exception 발생해야 함");
+    try {
+      olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(reqDto);
+      fail("앞에서 exception 발생해야 함");
+    } catch (BusinessException e) {
+      assertThat(e.getHttpStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
   }
   
-  @Test(expected = BusinessException.class)
+  @Test
   public void unlink_notExistedRelation_shouldThrowException() {
     given( serviceRepository.findById(testSvc.getSvcMgmtNum()) )
         .willReturn( Optional.of(testSvc) );
@@ -200,8 +222,12 @@ public class LinkServiceAndOlmagoTest {
         .willReturn( Optional.empty() );
   
     ReqRelSvcAndOlmagoCustDto reqDto = buildReqRelSvcAndOlmagoCustDto(testSvc.getSvcMgmtNum(), testOlmagoCust2.getOlmagoCustId());
-    olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(reqDto);
-    fail("앞에서 exception 발생해야 함");
+    try {
+      olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(reqDto);
+      fail("앞에서 exception 발생해야 함");
+    } catch (BusinessException e) {
+      assertThat(e.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
   }
   
   @Test
