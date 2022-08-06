@@ -4,12 +4,14 @@ import me.realimpact.dummy.swing.Util;
 import me.realimpact.dummy.swing.domain.*;
 import me.realimpact.dummy.swing.dto.*;
 import me.realimpact.dummy.swing.exception.BusinessException;
+import me.realimpact.dummy.swing.proxy.OlmagoProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import java.util.Optional;
+import java.time.Duration;
 
 import static me.realimpact.dummy.swing.exception.BusinessExceptionReason.*;
 
@@ -21,11 +23,9 @@ public class MobilePhoneServiceServiceImpl implements MobilePhoneServiceService 
   CustomerRepository customerRepository;
   ProductRepository productRepository;
   
-  OlmagoClient olmagoClient;
+  OlmagoProxy olmagoProxy;
   
-  enum ProductTierChangeType {
-    UP, DOWN, SAME
-  }
+  long timeoutSeconds;
   
   @Autowired
   public MobilePhoneServiceServiceImpl(
@@ -34,14 +34,16 @@ public class MobilePhoneServiceServiceImpl implements MobilePhoneServiceService 
       ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository,
       CustomerRepository customerRepository,
       ProductRepository productRepository,
-      OlmagoClient olmagoClient
+      OlmagoProxy olmagoProxy,
+      @Value("${app.timeout-seconds}") long timeoutSeconds
   ) {
     this.serviceRepository = serviceRepository;
     this.olmagoCustomerRepository = olmagoCustomerRepository;
     this.svcOlmagoCustRelHstRepository = svcOlmagoCustRelHstRepository;
     this.customerRepository = customerRepository;
     this.productRepository = productRepository;
-    this.olmagoClient = olmagoClient;
+    this.olmagoProxy = olmagoProxy;
+    this.timeoutSeconds = timeoutSeconds;
   }
   
   @Transactional
@@ -65,7 +67,10 @@ public class MobilePhoneServiceServiceImpl implements MobilePhoneServiceService 
         .flatMap(oc -> svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(mps, oc, Util.LocalDateTimeMax))
         .ifPresent(rel -> {
           rel.terminate(dto.getOwnerChangedDateTime());
-          olmagoClient.unlinkMobilePhoneService(rel.getOlmagoCustomer().getOlmagoCustId(), dto.getSvcMgmtNum());
+          olmagoProxy.unlinkMobilePhoneService(
+              rel.getOlmagoCustomer().getOlmagoCustId(),
+              dto.getSvcMgmtNum()
+          ).block(Duration.ofSeconds(timeoutSeconds));
         });
     
     Customer afterCust = customerRepository.findById(dto.getAfCustNum())
@@ -89,7 +94,10 @@ public class MobilePhoneServiceServiceImpl implements MobilePhoneServiceService 
         .flatMap(oc -> svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(mps, oc, Util.LocalDateTimeMax))
         .ifPresent(rel -> {
           rel.terminate(dto.getTerminatedDateTime());
-          olmagoClient.unlinkMobilePhoneService(rel.getOlmagoCustomer().getOlmagoCustId(), dto.getSvcMgmtNum());
+          olmagoProxy.unlinkMobilePhoneService(
+              rel.getOlmagoCustomer().getOlmagoCustId(),
+              dto.getSvcMgmtNum()
+          ).block(Duration.ofSeconds(timeoutSeconds));
         });
     mps.terminate(dto.getTerminatedDateTime());
   }
@@ -107,30 +115,17 @@ public class MobilePhoneServiceServiceImpl implements MobilePhoneServiceService 
     if (!mps.validateProduct(dto.getBfFeeProdId())) {
       throw new BusinessException(DATA_INTEGRITY_VIOLATION);
     }
-    Product bfProd = mps.getFeeProduct();
     Product afProd = productRepository.findById(dto.getAfFeeProdId())
         .orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND_BY_EXT_REF, dto.getAfFeeProdId()));
     mps.setFeeProduct(afProd);
   
     olmagoCustomerRepository.findBySwingCustomer(mps.getCustomer())
         .flatMap(oc -> svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(mps, oc, Util.LocalDateTimeMax))
-        .ifPresent(rel -> {
-          ProductTierChangeType type = calculateProductTierChangeType(bfProd, afProd);
-          if (type == ProductTierChangeType.UP) {
-            olmagoClient.applyMobilePhoneLinkedDiscount(rel.getOlmagoCustomer().getOlmagoCustId(), dto.getSvcMgmtNum());
-          } else if (type == ProductTierChangeType.DOWN) {
-            olmagoClient.cancelMobilePhoneLinkedDiscount(rel.getOlmagoCustomer().getOlmagoCustId(), dto.getSvcMgmtNum());
-          }
-        });
-  }
-  
-  private ProductTierChangeType calculateProductTierChangeType(Product beforeProduct, Product afterProduct) {
-    if (beforeProduct.isMobilePhoneLinkedDiscountTarget() && !afterProduct.isMobilePhoneLinkedDiscountTarget()) {
-      return ProductTierChangeType.DOWN;
-    } else if (!beforeProduct.isMobilePhoneLinkedDiscountTarget() && afterProduct.isMobilePhoneLinkedDiscountTarget()) {
-      return ProductTierChangeType.UP;
-    } else {
-      return ProductTierChangeType.SAME;
-    }
+        .ifPresent(rel -> olmagoProxy.applyMobilePhoneLinkedDiscount(
+            rel.getOlmagoCustomer().getOlmagoCustId(),
+            dto.getSvcMgmtNum(),
+            afProd.isMobilePhoneLinkedDiscountTarget()
+            ).block(Duration.ofSeconds(timeoutSeconds))
+        );
   }
 }

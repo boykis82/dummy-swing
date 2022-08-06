@@ -10,6 +10,9 @@ logging:
         SQL: INFO
         type: INFO
 
+app:
+  timeout-seconds: 5
+
 spring:
   jpa:
     show_sql: true

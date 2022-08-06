@@ -2,7 +2,6 @@ package me.realimpact.dummy.swing.web;
 
 import me.realimpact.dummy.swing.dto.*;
 import me.realimpact.dummy.swing.service.MobilePhoneServiceService;
-import me.realimpact.dummy.swing.service.OlmagoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
