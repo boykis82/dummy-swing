@@ -42,6 +42,9 @@ public class OlmagoControllerTest {
   @Autowired
   ObjectMapper mapper;
   
+  private static final String MOBILE_PHONE_URL = "/swing/api/v1/mobile-phones";
+  private static final String MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL = "/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer";
+  
   @Test
   public void givenExistedServicesAndCi_whenGetServicesByCI_thenShouldReturnServices() throws Exception {
     List<MobilePhoneResponseDto> mobilePhoneResponseDtos = Fixtures.createManyMobilePhoneResponseDtos();
@@ -50,7 +53,7 @@ public class OlmagoControllerTest {
     given(olmagoService.getServicesByCI(testCi))
         .willReturn(mobilePhoneResponseDtos);
   
-    mvc.perform(get("/swing/api/v1/mobile-phones")
+    mvc.perform(get(MOBILE_PHONE_URL)
             .param("ci", testCi)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -66,7 +69,7 @@ public class OlmagoControllerTest {
         .willReturn(Collections.emptyList());
     
     mvc.perform(
-        get("/swing/api/v1/mobile-phones")
+        get(MOBILE_PHONE_URL)
             .param("ci", testCi)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -82,7 +85,7 @@ public class OlmagoControllerTest {
         .willThrow(new BusinessException(SERVICE_NOT_FOUND_BY_EXT_REF));
   
     mvc.perform(
-        post("/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer", 1)
+        post(MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL, 1)
             .content(mapper.writeValueAsString(dto))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
@@ -96,7 +99,7 @@ public class OlmagoControllerTest {
         .willThrow(new BusinessException(CUSTOMER_MISMATCH));
     
     mvc.perform(
-            post("/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer", 1)
+            post(MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL, 1)
                 .content(mapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isPreconditionFailed())
@@ -110,7 +113,7 @@ public class OlmagoControllerTest {
         .willThrow(new BusinessException(SERVICE_OLMAGO_RELATION_EXISTED));
     
     mvc.perform(
-            post("/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer", 1)
+            post(MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL, 1)
                 .content(mapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isConflict())
@@ -130,7 +133,7 @@ public class OlmagoControllerTest {
         );
   
     mvc.perform(
-            post("/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer", 1)
+            post(MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL, 1)
                 .content(mapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -144,7 +147,7 @@ public class OlmagoControllerTest {
         .willThrow(new BusinessException(SERVICE_NOT_FOUND_BY_EXT_REF));
     
     mvc.perform(
-            delete("/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer", 1)
+            delete(MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL, 1)
                 .content(mapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
@@ -158,7 +161,7 @@ public class OlmagoControllerTest {
         .willThrow(new BusinessException(CUSTOMER_NOT_FOUND_BY_EXT_REF));
     
     mvc.perform(
-            delete("/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer", 1)
+            delete(MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL, 1)
                 .content(mapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
@@ -172,7 +175,7 @@ public class OlmagoControllerTest {
         .willThrow(new BusinessException(SERVICE_OLMAGO_RELATION_NOT_EXISTED));
     
     mvc.perform(
-            delete("/swing/api/v1/mobile-phones/{svc-mgmt-num}/linked-olmago-customer", 1)
+            delete(MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL, 1)
                 .content(mapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())

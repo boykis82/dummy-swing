@@ -9,6 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,19 +29,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class LinkServiceAndOlmagoTest {
-  @Autowired
-  OlmagoService olmagoService;
+  @InjectMocks
+  OlmagoServiceImpl olmagoService;
   
-  @MockBean
+  @Mock
   OlmagoCustomerRepository olmagoCustomerRepository;
   
-  @MockBean
+  @Mock
   ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository;
   
-  @MockBean
+  @Mock
   MobilePhoneServiceRepository serviceRepository;
   
   List<MobilePhoneService> services;

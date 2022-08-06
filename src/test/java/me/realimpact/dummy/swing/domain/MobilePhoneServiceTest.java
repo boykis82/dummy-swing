@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ServiceTest {
+public class MobilePhoneServiceTest {
   @Autowired
   CustomerRepository customerRepository;
   
