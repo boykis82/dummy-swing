@@ -3,7 +3,9 @@ package me.realimpact.dummy.swing.web;
 import me.realimpact.dummy.swing.dto.ReqRelSvcAndOlmagoCustDto;
 import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
 import me.realimpact.dummy.swing.dto.SvcAndOlmagoRelationResponseDto;
+import me.realimpact.dummy.swing.service.OlmagoClient;
 import me.realimpact.dummy.swing.service.OlmagoService;
+import me.realimpact.dummy.swing.service.OlmagoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +15,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/swing/api/v1/mobile-phones")
 public class OlmagoController {
-  @Autowired
   private OlmagoService olmagoService;
+  
+  @Autowired
+  public OlmagoController(OlmagoService olmagoService) {
+    this.olmagoService = olmagoService;
+  }
   
   @GetMapping
   public ResponseEntity<List<MobilePhoneResponseDto>> getServicesByCI(@RequestParam("ci") String ci) {

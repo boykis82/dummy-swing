@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/swing/api/v1/mobile-phones")
 public class MobilePhoneServiceController {
-  @Autowired
   MobilePhoneServiceService mobilePhoneServiceService;
+  
+  @Autowired
+  public MobilePhoneServiceController(MobilePhoneServiceService mobilePhoneServiceService) {
+    this.mobilePhoneServiceService = mobilePhoneServiceService;
+  }
 
   @PutMapping("/{svc-mgmt-num}/owner-customer")
   public ResponseEntity<Void> changeOwner(

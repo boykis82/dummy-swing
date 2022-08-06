@@ -15,26 +15,33 @@ import static me.realimpact.dummy.swing.exception.BusinessExceptionReason.*;
 
 @Service
 public class MobilePhoneServiceServiceImpl implements MobilePhoneServiceService {
-  @Autowired
   MobilePhoneServiceRepository serviceRepository;
-  
-  @Autowired
   OlmagoCustomerRepository olmagoCustomerRepository;
-  
-  @Autowired
   ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository;
-  
-  @Autowired
   CustomerRepository customerRepository;
-  
-  @Autowired
   ProductRepository productRepository;
   
-  @Autowired
   OlmagoClient olmagoClient;
   
   enum ProductTierChangeType {
     UP, DOWN, SAME
+  }
+  
+  @Autowired
+  public MobilePhoneServiceServiceImpl(
+      MobilePhoneServiceRepository serviceRepository,
+      OlmagoCustomerRepository olmagoCustomerRepository,
+      ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository,
+      CustomerRepository customerRepository,
+      ProductRepository productRepository,
+      OlmagoClient olmagoClient
+  ) {
+    this.serviceRepository = serviceRepository;
+    this.olmagoCustomerRepository = olmagoCustomerRepository;
+    this.svcOlmagoCustRelHstRepository = svcOlmagoCustRelHstRepository;
+    this.customerRepository = customerRepository;
+    this.productRepository = productRepository;
+    this.olmagoClient = olmagoClient;
   }
   
   @Transactional

@@ -17,14 +17,20 @@ import static me.realimpact.dummy.swing.exception.BusinessExceptionReason.*;
 
 @Service
 public class OlmagoServiceImpl implements OlmagoService {
-  @Autowired
   MobilePhoneServiceRepository serviceRepository;
-  
-  @Autowired
   OlmagoCustomerRepository olmagoCustomerRepository;
+  ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository;
   
   @Autowired
-  ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository;
+  public OlmagoServiceImpl(
+      MobilePhoneServiceRepository serviceRepository,
+      OlmagoCustomerRepository olmagoCustomerRepository,
+      ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository
+  ) {
+    this.serviceRepository = serviceRepository;
+    this.olmagoCustomerRepository = olmagoCustomerRepository;
+    this.svcOlmagoCustRelHstRepository = svcOlmagoCustRelHstRepository;
+  }
   
   @Override
   @Transactional(readOnly = true)
