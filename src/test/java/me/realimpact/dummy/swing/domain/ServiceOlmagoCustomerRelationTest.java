@@ -1,8 +1,7 @@
 package me.realimpact.dummy.swing.domain;
 
 import me.realimpact.dummy.swing.Fixtures;
-import me.realimpact.dummy.swing.Util;
-import me.realimpact.dummy.swing.service.OlmagoService;
+import me.realimpact.dummy.swing.util.Util;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class ServiceOlmagoCustomerRelationTest {
   CustomerRepository customerRepository;
 
   @Autowired
-  MobilePhoneServiceRepository serviceRepository;
+  MobilePhoneRepository serviceRepository;
 
   @Autowired
   ProductRepository productRepository;
@@ -33,19 +32,19 @@ public class ServiceOlmagoCustomerRelationTest {
   OlmagoCustomerRepository olmagoCustomerRepository;
 
   @Autowired
-  ServiceOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository;
+  MobilePhoneOlmagoCustomerRelationHistoryRepository svcOlmagoCustRelHstRepository;
 
   List<Customer> customers;
   List<Product> products;
-  List<MobilePhoneService> services;
+  List<MobilePhone> services;
 
   OlmagoCustomer olmagoCustomer;
   OlmagoCustomer olmagoCustomer2;
   OlmagoCustomer olmagoCustomerNotMapped;
   
-  ServiceOlmagoCustomerRelationHistory socrh;
-  ServiceOlmagoCustomerRelationHistory socrh2;
-  ServiceOlmagoCustomerRelationHistory socrh3;
+  MobilePhoneOlmagoCustomerRelationHistory socrh;
+  MobilePhoneOlmagoCustomerRelationHistory socrh2;
+  MobilePhoneOlmagoCustomerRelationHistory socrh3;
 
   @Before
   public void setUp() {
@@ -56,17 +55,17 @@ public class ServiceOlmagoCustomerRelationTest {
     olmagoCustomer = olmagoCustomerRepository.save(
         OlmagoCustomer.builder().olmagoCustId(1).swingCustomer(customers.get(0)).build()
     );
-    socrh = ServiceOlmagoCustomerRelationHistory.newHistory(services.get(0), olmagoCustomer, LocalDateTime.now());
+    socrh = MobilePhoneOlmagoCustomerRelationHistory.newHistory(services.get(0), olmagoCustomer, LocalDateTime.now());
     svcOlmagoCustRelHstRepository.save(socrh);
   
     olmagoCustomer2 = olmagoCustomerRepository.save(
         OlmagoCustomer.builder().olmagoCustId(2).swingCustomer(customers.get(2)).build()
     );
-    socrh2 = ServiceOlmagoCustomerRelationHistory.newHistory(services.get(3), olmagoCustomer2, LocalDateTime.now());
+    socrh2 = MobilePhoneOlmagoCustomerRelationHistory.newHistory(services.get(3), olmagoCustomer2, LocalDateTime.now());
     svcOlmagoCustRelHstRepository.save(socrh2);
   
     socrh2.terminate(LocalDateTime.now());
-    socrh3 = ServiceOlmagoCustomerRelationHistory.newHistory(services.get(4), olmagoCustomer2, LocalDateTime.now());
+    socrh3 = MobilePhoneOlmagoCustomerRelationHistory.newHistory(services.get(4), olmagoCustomer2, LocalDateTime.now());
     svcOlmagoCustRelHstRepository.save(socrh3);
   
     olmagoCustomerNotMapped = olmagoCustomerRepository.save(
@@ -94,8 +93,8 @@ public class ServiceOlmagoCustomerRelationTest {
 
   @Test
   public void findRelation_andCondition_activeStatus() {
-    Optional<ServiceOlmagoCustomerRelationHistory> socrhOpt =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(
+    Optional<MobilePhoneOlmagoCustomerRelationHistory> socrhOpt =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(
           services.get(0), olmagoCustomer, Util.LocalDateTimeMax
         );
     assertThat(socrhOpt).isPresent();
@@ -104,8 +103,8 @@ public class ServiceOlmagoCustomerRelationTest {
   @Test
   public void findRelation_andCondition_terminatedStatus() {
     socrh.terminate(LocalDateTime.now());
-    Optional<ServiceOlmagoCustomerRelationHistory> socrhOpt =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(
+    Optional<MobilePhoneOlmagoCustomerRelationHistory> socrhOpt =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(
             services.get(0), olmagoCustomer, Util.LocalDateTimeMax
         );
     assertThat(socrhOpt).isEmpty();
@@ -113,8 +112,8 @@ public class ServiceOlmagoCustomerRelationTest {
   
   @Test
   public void findRelation_andCondition_notExisted() {
-    Optional<ServiceOlmagoCustomerRelationHistory> socrhOpt =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceAndOlmagoCustomer(
+    Optional<MobilePhoneOlmagoCustomerRelationHistory> socrhOpt =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(
             services.get(0), olmagoCustomer2, Util.LocalDateTimeMax
         );
     assertThat(socrhOpt).isEmpty();
@@ -122,8 +121,8 @@ public class ServiceOlmagoCustomerRelationTest {
 
   @Test
   public void findRelation_orCondition_matchBoth() {
-    List<ServiceOlmagoCustomerRelationHistory> socrhs =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceOrOlmagoCustomer(
+    List<MobilePhoneOlmagoCustomerRelationHistory> socrhs =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneOrOlmagoCustomer(
             services.get(0), olmagoCustomer, Util.LocalDateTimeMax
         );
     assertThat(socrhs).hasSize(1);
@@ -132,8 +131,8 @@ public class ServiceOlmagoCustomerRelationTest {
   @Test
   public void findRelation_orCondition_terminatedStatus() {
     socrh.terminate(LocalDateTime.now());
-    List<ServiceOlmagoCustomerRelationHistory> socrhs =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceOrOlmagoCustomer(
+    List<MobilePhoneOlmagoCustomerRelationHistory> socrhs =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneOrOlmagoCustomer(
             services.get(0), olmagoCustomer, Util.LocalDateTimeMax
         );
     assertThat(socrhs).isEmpty();
@@ -141,8 +140,8 @@ public class ServiceOlmagoCustomerRelationTest {
   
   @Test
   public void findRelation_orCondition_matchServiceOnly() {
-    List<ServiceOlmagoCustomerRelationHistory> socrhs =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceOrOlmagoCustomer(
+    List<MobilePhoneOlmagoCustomerRelationHistory> socrhs =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneOrOlmagoCustomer(
             services.get(4), olmagoCustomer, Util.LocalDateTimeMax
         );
     assertThat(socrhs).isNotEmpty();
@@ -150,8 +149,8 @@ public class ServiceOlmagoCustomerRelationTest {
   
   @Test
   public void findRelation_orCondition_matchOlmagoCustomerOnly() {
-    List<ServiceOlmagoCustomerRelationHistory> socrhs =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceOrOlmagoCustomer(
+    List<MobilePhoneOlmagoCustomerRelationHistory> socrhs =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneOrOlmagoCustomer(
             services.get(6), olmagoCustomer, Util.LocalDateTimeMax
         );
     assertThat(socrhs).isNotEmpty();
@@ -159,8 +158,8 @@ public class ServiceOlmagoCustomerRelationTest {
   
   @Test
   public void findRelation_orCondition_notExisted() {
-    List<ServiceOlmagoCustomerRelationHistory> socrhs =
-        svcOlmagoCustRelHstRepository.findRelationHistoryByServiceOrOlmagoCustomer(
+    List<MobilePhoneOlmagoCustomerRelationHistory> socrhs =
+        svcOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneOrOlmagoCustomer(
             services.get(5), olmagoCustomerNotMapped, Util.LocalDateTimeMax
         );
     assertThat(socrhs).isEmpty();

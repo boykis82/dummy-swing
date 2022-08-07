@@ -1,7 +1,7 @@
 package me.realimpact.dummy.swing.domain;
 
 import lombok.*;
-import me.realimpact.dummy.swing.Util;
+import me.realimpact.dummy.swing.util.Util;
 
 import javax.persistence.Id;
 import javax.persistence.Version;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
     name = "zord_svc_olmago_cust_rel_hst",
     indexes = @Index(name = "i_svc_olmago_cust", columnList = "svc_mgmt_num, olmago_cust_id, eff_end_dtm DESC", unique = true)
 )
-public class ServiceOlmagoCustomerRelationHistory extends BaseEntity {
+public class MobilePhoneOlmagoCustomerRelationHistory extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -32,31 +32,31 @@ public class ServiceOlmagoCustomerRelationHistory extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "svc_mgmt_num")
-  private MobilePhoneService mobilePhoneService;
+  private MobilePhone mobilePhone;
 
   @ManyToOne
   @JoinColumn(name = "olmago_cust_id")
   private OlmagoCustomer olmagoCustomer;
 
   @Builder
-  private ServiceOlmagoCustomerRelationHistory(
-      MobilePhoneService mobilePhoneService,
+  private MobilePhoneOlmagoCustomerRelationHistory(
+      MobilePhone mobilePhone,
       OlmagoCustomer olmagoCustomer,
       LocalDateTime effStaDtm
   ) {
-    this.mobilePhoneService = mobilePhoneService;
+    this.mobilePhone = mobilePhone;
     this.olmagoCustomer = olmagoCustomer;
     this.effStaDtm = effStaDtm;
     this.effEndDtm = Util.LocalDateTimeMax;
   }
 
-  public static ServiceOlmagoCustomerRelationHistory newHistory(
-      MobilePhoneService mobilePhoneService,
+  public static MobilePhoneOlmagoCustomerRelationHistory newHistory(
+      MobilePhone mobilePhone,
       OlmagoCustomer olmagoCustomer,
       LocalDateTime effStaDtm
   ) {
-    return ServiceOlmagoCustomerRelationHistory.builder()
-        .mobilePhoneService(mobilePhoneService)
+    return MobilePhoneOlmagoCustomerRelationHistory.builder()
+        .mobilePhone(mobilePhone)
         .olmagoCustomer(olmagoCustomer)
         .effStaDtm(effStaDtm)
         .build();

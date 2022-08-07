@@ -1,19 +1,26 @@
 package me.realimpact.dummy.swing.web;
 
 import me.realimpact.dummy.swing.dto.*;
-import me.realimpact.dummy.swing.service.MobilePhoneServiceService;
+import me.realimpact.dummy.swing.service.MobilePhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/swing/api/v1/mobile-phones")
-public class MobilePhoneServiceController {
-  MobilePhoneServiceService mobilePhoneServiceService;
+public class MobilePhoneController {
+  private final MobilePhoneService mobilePhoneService;
   
   @Autowired
-  public MobilePhoneServiceController(MobilePhoneServiceService mobilePhoneServiceService) {
-    this.mobilePhoneServiceService = mobilePhoneServiceService;
+  public MobilePhoneController(MobilePhoneService mobilePhoneService) {
+    this.mobilePhoneService = mobilePhoneService;
+  }
+
+  @GetMapping
+  public ResponseEntity<List<MobilePhoneResponseDto>> getMobilePhonesByCI(@RequestParam("ci") String ci) {
+    return ResponseEntity.ok().body(mobilePhoneService.getMobilePhonesByCi(ci));
   }
 
   @PutMapping("/{svc-mgmt-num}/owner-customer")
@@ -21,7 +28,7 @@ public class MobilePhoneServiceController {
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody ChangeOwnerRequestDto reqDto
   ) {
-    mobilePhoneServiceService.changeOwner(reqDto);
+    mobilePhoneService.changeOwner(reqDto);
     return ResponseEntity.ok().build();
   }
   
@@ -30,7 +37,7 @@ public class MobilePhoneServiceController {
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody TerminateRequestDto reqDto
   ) {
-    mobilePhoneServiceService.terminate(reqDto);
+    mobilePhoneService.terminate(reqDto);
     return ResponseEntity.ok().build();
   }
   
@@ -39,7 +46,7 @@ public class MobilePhoneServiceController {
       @PathVariable("svc-mgmt-num") long svcMgmtNum,
       @RequestBody ChangeFeeProductRequestDto reqDto
   ) {
-    mobilePhoneServiceService.changeFeeProduct(reqDto);
+    mobilePhoneService.changeFeeProduct(reqDto);
     return ResponseEntity.ok().build();
   }
 }

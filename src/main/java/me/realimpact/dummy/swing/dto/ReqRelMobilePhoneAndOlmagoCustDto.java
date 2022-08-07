@@ -6,13 +6,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ReqRelSvcAndOlmagoCustDto {
+public class ReqRelMobilePhoneAndOlmagoCustDto {
   private long svcMgmtNum;
   private long olmagoCustomerId;
   private LocalDateTime eventDateTime;
   
   @Builder
-  ReqRelSvcAndOlmagoCustDto(long svcMgmtNum, long olmagoCustomerId, LocalDateTime eventDateTime) {
+  ReqRelMobilePhoneAndOlmagoCustDto(long svcMgmtNum, long olmagoCustomerId, LocalDateTime eventDateTime) {
     this.svcMgmtNum = svcMgmtNum;
     this.olmagoCustomerId = olmagoCustomerId;
     this.eventDateTime = eventDateTime;

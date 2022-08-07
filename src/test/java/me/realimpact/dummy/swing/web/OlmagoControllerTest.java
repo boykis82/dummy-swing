@@ -1,10 +1,8 @@
 package me.realimpact.dummy.swing.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.realimpact.dummy.swing.Fixtures;
-import me.realimpact.dummy.swing.dto.MobilePhoneResponseDto;
-import me.realimpact.dummy.swing.dto.ReqRelSvcAndOlmagoCustDto;
-import me.realimpact.dummy.swing.dto.SvcAndOlmagoRelationResponseDto;
+import me.realimpact.dummy.swing.dto.ReqRelMobilePhoneAndOlmagoCustDto;
+import me.realimpact.dummy.swing.dto.MobilePhoneAndOlmagoRelationResponseDto;
 import me.realimpact.dummy.swing.exception.BusinessException;
 import me.realimpact.dummy.swing.service.OlmagoService;
 import org.junit.Test;
@@ -20,8 +18,6 @@ import static me.realimpact.dummy.swing.exception.BusinessExceptionReason.*;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
@@ -45,43 +41,10 @@ public class OlmagoControllerTest {
   private static final String MOBILE_PHONE_BASE_URL = "/swing/api/v1/mobile-phones";
   private static final String MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_BASE_URL = MOBILE_PHONE_BASE_URL + "/{svc-mgmt-num}/linked-olmago-customer";
   private static final String MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_URL = MOBILE_PHONE_UNDER_OLMAGO_CUSTOMER_BASE_URL + "/{olmago-customer-id}";
-  
-  @Test
-  public void givenExistedServicesAndCi_whenGetServicesByCI_thenShouldReturnServices() throws Exception {
-    List<MobilePhoneResponseDto> mobilePhoneResponseDtos = Fixtures.createManyMobilePhoneResponseDtos();
-    String testCi = "22222";
-    
-    given(olmagoService.getServicesByCI(testCi))
-        .willReturn(mobilePhoneResponseDtos);
-  
-    mvc.perform(get(MOBILE_PHONE_BASE_URL)
-            .param("ci", testCi)
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(mobilePhoneResponseDtos.size())))
-        .andExpect(jsonPath("$[0].svcMgmtNum", is(1)));
-  }
-  
-  @Test
-  public void givenNotExistedServicesAndCi_whenGetServicesByCI_thenShouldReturnEmpty() throws Exception {
-    String testCi = "22222";
-    
-    given(olmagoService.getServicesByCI(testCi))
-        .willReturn(Collections.emptyList());
-    
-    mvc.perform(
-        get(MOBILE_PHONE_BASE_URL)
-            .param("ci", testCi)
-            .contentType(MediaType.APPLICATION_JSON)
-        )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(0)))
-        .andDo(print());
-  }
-  
+
   @Test
   public void givenNotExistedService_whenLinkServiceAndOlmago_thenShouldReturnBadRequest() throws Exception {
-    ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
+    ReqRelMobilePhoneAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
     given(olmagoService.linkOlmagoCustomerWithMobilePhoneService(dto))
         .willThrow(new BusinessException(SERVICE_NOT_FOUND_BY_EXT_REF));
   
@@ -95,7 +58,7 @@ public class OlmagoControllerTest {
   
   @Test
   public void givenMismatchCustomer_whenLinkServiceAndOlmago_thenShouldReturnPreconditionFailed() throws Exception {
-    ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
+    ReqRelMobilePhoneAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
     given(olmagoService.linkOlmagoCustomerWithMobilePhoneService(dto))
         .willThrow(new BusinessException(CUSTOMER_MISMATCH));
     
@@ -109,7 +72,7 @@ public class OlmagoControllerTest {
   
   @Test
   public void givenExistedRelation_whenLinkServiceAndOlmago_thenShouldReturnConflict() throws Exception {
-    ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
+    ReqRelMobilePhoneAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
     given(olmagoService.linkOlmagoCustomerWithMobilePhoneService(dto))
         .willThrow(new BusinessException(SERVICE_OLMAGO_RELATION_EXISTED));
     
@@ -123,10 +86,10 @@ public class OlmagoControllerTest {
   
   @Test
   public void givenNotExistedRelation_whenLinkServiceAndOlmago_thenShouldBeOk() throws Exception {
-    ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
+    ReqRelMobilePhoneAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
     given(olmagoService.linkOlmagoCustomerWithMobilePhoneService(dto))
         .willReturn(
-            SvcAndOlmagoRelationResponseDto.builder()
+            MobilePhoneAndOlmagoRelationResponseDto.builder()
                 .svcMgmtNum(1L)
                 .olmagoCustomerId(2L)
                 .eventDataTime(LocalDateTime.now())
@@ -143,7 +106,7 @@ public class OlmagoControllerTest {
   
   @Test
   public void givenNotExistedService_whenUnlinkServiceAndOlmago_thenShouldReturnBadRequest() throws Exception {
-    ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
+    ReqRelMobilePhoneAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
     given(olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(dto))
         .willThrow(new BusinessException(SERVICE_NOT_FOUND_BY_EXT_REF));
     
@@ -157,7 +120,7 @@ public class OlmagoControllerTest {
   
   @Test
   public void givenNotExistedOlmagoCustomer_whenUnlinkServiceAndOlmago_thenShouldReturnBadRequest() throws Exception {
-    ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
+    ReqRelMobilePhoneAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
     given(olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(dto))
         .willThrow(new BusinessException(CUSTOMER_NOT_FOUND_BY_EXT_REF));
     
@@ -171,7 +134,7 @@ public class OlmagoControllerTest {
   
   @Test
   public void givenNotExistedRelation_whenUnlinkServiceAndOlmago_thenShouldReturnNotFound() throws Exception {
-    ReqRelSvcAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
+    ReqRelMobilePhoneAndOlmagoCustDto dto = buildReqRelSvcAndOlmagoCustDto(1L, 2L, LocalDateTime.now());
     given(olmagoService.unlinkOlmagoCustomerWithMobilePhoneService(dto))
         .willThrow(new BusinessException(SERVICE_OLMAGO_RELATION_NOT_EXISTED));
     
@@ -183,8 +146,8 @@ public class OlmagoControllerTest {
         .andDo(print());
   }
   
-  private ReqRelSvcAndOlmagoCustDto buildReqRelSvcAndOlmagoCustDto(long svcMgmtNum, long olmagoCustomerId, LocalDateTime eventDateTime) {
-    return ReqRelSvcAndOlmagoCustDto.builder()
+  private ReqRelMobilePhoneAndOlmagoCustDto buildReqRelSvcAndOlmagoCustDto(long svcMgmtNum, long olmagoCustomerId, LocalDateTime eventDateTime) {
+    return ReqRelMobilePhoneAndOlmagoCustDto.builder()
         .svcMgmtNum(svcMgmtNum)
         .olmagoCustomerId(olmagoCustomerId)
         .eventDateTime(eventDateTime)

@@ -2,7 +2,7 @@ package me.realimpact.dummy.swing.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import me.realimpact.dummy.swing.domain.MobilePhoneService;
+import me.realimpact.dummy.swing.domain.MobilePhone;
 
 import java.time.LocalDate;
 
@@ -32,14 +32,14 @@ public class MobilePhoneResponseDto {
     this.isMobilePhoneLinkedDiscountTarget = isMobilePhoneLinkedDiscountTarget;
   }
   
-  public static MobilePhoneResponseDto of(MobilePhoneService svc) {
+  public static MobilePhoneResponseDto of(MobilePhone mobilePhone) {
     return MobilePhoneResponseDto.builder()
-        .svcMgmtNum(svc.getSvcMgmtNum())
-        .svcNum(svc.getSvcNum())
-        .svcScrbDt(svc.getSvcScrbDt())
-        .feeProdID(svc.getFeeProduct().getProdId())
-        .feeProdNm(svc.getFeeProduct().getProdNm())
-        .isMobilePhoneLinkedDiscountTarget(svc.getFeeProduct().isMobilePhoneLinkedDiscountTarget())
+        .svcMgmtNum(mobilePhone.getSvcMgmtNum())
+        .svcNum(mobilePhone.getSvcNum())
+        .svcScrbDt(mobilePhone.getSvcScrbDt())
+        .feeProdID(mobilePhone.getFeeProduct().getProdId())
+        .feeProdNm(mobilePhone.getFeeProduct().getProdNm())
+        .isMobilePhoneLinkedDiscountTarget(mobilePhone.getFeeProduct().isMobilePhoneLinkedDiscountTarget())
         .build();
   }
 }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "zord_svc")
-public class MobilePhoneService extends BaseEntity {
+public class MobilePhone extends BaseEntity {
   @Id
   @Column(name = "svc_mgmt_num")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,21 +41,21 @@ public class MobilePhoneService extends BaseEntity {
   private Product feeProduct;
 
   @Builder
-  private MobilePhoneService(Customer customer,
-                             String svcNum,
-                             LocalDate svcScrbDt,
-                             Product feeProduct) {
+  private MobilePhone(Customer customer,
+                      String svcNum,
+                      LocalDate svcScrbDt,
+                      Product feeProduct) {
     this.customer = customer;
     this.svcNum = svcNum;
     this.svcScrbDt = svcScrbDt;
     this.feeProduct = feeProduct;
   }
 
-  public static MobilePhoneService subscribe(Customer customer,
-                                             String svcNum,
-                                             LocalDate svcScrbDt,
-                                             Product feeProduct) {
-    return MobilePhoneService.builder()
+  public static MobilePhone subscribe(Customer customer,
+                                      String svcNum,
+                                      LocalDate svcScrbDt,
+                                      Product feeProduct) {
+    return MobilePhone.builder()
         .customer(customer)
         .svcNum(svcNum)
         .svcScrbDt(svcScrbDt)

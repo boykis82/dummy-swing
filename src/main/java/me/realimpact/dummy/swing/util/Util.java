@@ -1,4 +1,4 @@
-package me.realimpact.dummy.swing;
+package me.realimpact.dummy.swing.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

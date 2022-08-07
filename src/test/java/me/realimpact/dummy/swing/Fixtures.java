@@ -27,15 +27,15 @@ public class Fixtures {
     );
   }
   
-  public static List<MobilePhoneService> createManyServices(List<Customer> customers, List<Product> products) {
+  public static List<MobilePhone> createManyServices(List<Customer> customers, List<Product> products) {
     return List.of(
-            MobilePhoneService.subscribe(customers.get(0), "1", LocalDate.of(2000,1,1), products.get(0)),
-            MobilePhoneService.subscribe(customers.get(0), "2", LocalDate.of(2001,1,1), products.get(1)),
-            MobilePhoneService.subscribe(customers.get(1), "3", LocalDate.of(2002,1,1), products.get(1)),
-            MobilePhoneService.subscribe(customers.get(2), "4", LocalDate.of(2003,1,1), products.get(2)),
-            MobilePhoneService.subscribe(customers.get(2), "5", LocalDate.of(2004,1,1), products.get(3)),
-            MobilePhoneService.subscribe(customers.get(2), "6", LocalDate.of(2005,1,1), products.get(1)),
-            MobilePhoneService.subscribe(customers.get(2), "7", LocalDate.of(2006,1,1), products.get(0))
+            MobilePhone.subscribe(customers.get(0), "1", LocalDate.of(2000,1,1), products.get(0)),
+            MobilePhone.subscribe(customers.get(0), "2", LocalDate.of(2001,1,1), products.get(1)),
+            MobilePhone.subscribe(customers.get(1), "3", LocalDate.of(2002,1,1), products.get(1)),
+            MobilePhone.subscribe(customers.get(2), "4", LocalDate.of(2003,1,1), products.get(2)),
+            MobilePhone.subscribe(customers.get(2), "5", LocalDate.of(2004,1,1), products.get(3)),
+            MobilePhone.subscribe(customers.get(2), "6", LocalDate.of(2005,1,1), products.get(1)),
+            MobilePhone.subscribe(customers.get(2), "7", LocalDate.of(2006,1,1), products.get(0))
     );
   }
   
