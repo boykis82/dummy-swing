@@ -32,7 +32,7 @@ public class OlmagoCustomerTest {
         Customer.newCustomer("11111", "강인수", LocalDate.of(1982,1,1))
     );
     olmagoCustomerRepository.save(
-        OlmagoCustomer.builder().olmagoCustId(5).swingCustomer(swingCustomer1).build()
+        OlmagoCustomer.builder().olmagoCustId(5L).swingCustomer(swingCustomer1).build()
     );
 
     swingCustomer2 = customerRepository.save(

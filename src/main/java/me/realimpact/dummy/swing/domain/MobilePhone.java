@@ -67,8 +67,8 @@ public class MobilePhone extends BaseEntity {
     svcTermDt = termDtm.toLocalDate();
   }
   
-  public boolean validateCustomer(long custNum) {
-    return customer.getCustNum() == custNum;
+  public boolean validateCustomer(Long custNum) {
+    return customer.getCustNum().equals(custNum);
   }
   
   public boolean validateProduct(String prodId) {

@@ -53,13 +53,13 @@ public class ServiceOlmagoCustomerRelationTest {
     services = serviceRepository.saveAll(Fixtures.createManyServices(customers, products));
     
     olmagoCustomer = olmagoCustomerRepository.save(
-        OlmagoCustomer.builder().olmagoCustId(1).swingCustomer(customers.get(0)).build()
+        OlmagoCustomer.builder().olmagoCustId(1L).swingCustomer(customers.get(0)).build()
     );
     socrh = MobilePhoneOlmagoCustomerRelationHistory.newHistory(services.get(0), olmagoCustomer, LocalDateTime.now());
     svcOlmagoCustRelHstRepository.save(socrh);
   
     olmagoCustomer2 = olmagoCustomerRepository.save(
-        OlmagoCustomer.builder().olmagoCustId(2).swingCustomer(customers.get(2)).build()
+        OlmagoCustomer.builder().olmagoCustId(2L).swingCustomer(customers.get(2)).build()
     );
     socrh2 = MobilePhoneOlmagoCustomerRelationHistory.newHistory(services.get(3), olmagoCustomer2, LocalDateTime.now());
     svcOlmagoCustRelHstRepository.save(socrh2);
@@ -69,7 +69,7 @@ public class ServiceOlmagoCustomerRelationTest {
     svcOlmagoCustRelHstRepository.save(socrh3);
   
     olmagoCustomerNotMapped = olmagoCustomerRepository.save(
-        OlmagoCustomer.builder().olmagoCustId(3).swingCustomer(customers.get(3)).build()
+        OlmagoCustomer.builder().olmagoCustId(3L).swingCustomer(customers.get(3)).build()
     );
   }
 

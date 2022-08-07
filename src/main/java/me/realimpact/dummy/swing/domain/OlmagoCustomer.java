@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class OlmagoCustomer extends BaseEntity {
   @Id
   @Column(name = "olmago_cust_id")
-  private long olmagoCustId;
+  private Long olmagoCustId;
 
   @Version
   private Integer version;
@@ -26,7 +26,7 @@ public class OlmagoCustomer extends BaseEntity {
   private Customer swingCustomer;
 
   @Builder
-  public OlmagoCustomer(long olmagoCustId, Customer swingCustomer) {
+  public OlmagoCustomer(Long olmagoCustId, Customer swingCustomer) {
     this.olmagoCustId = olmagoCustId;
     this.swingCustomer = swingCustomer;
   }
