@@ -13,7 +13,7 @@ public class MobilePhoneResponseDto {
   private LocalDate svcScrbDt;
   private String feeProdID;
   private String feeProdNm;
-  private boolean isMobilePhoneLinkedDiscountTarget;
+  private String productTier;
   
   @Builder
   private MobilePhoneResponseDto(
@@ -22,14 +22,14 @@ public class MobilePhoneResponseDto {
     LocalDate svcScrbDt,
     String feeProdID,
     String feeProdNm,
-    boolean isMobilePhoneLinkedDiscountTarget
+    String productTier
   ) {
     this.svcMgmtNum = svcMgmtNum;
     this.svcNum = svcNum;
     this.svcScrbDt = svcScrbDt;
     this.feeProdID = feeProdID;
     this.feeProdNm = feeProdNm;
-    this.isMobilePhoneLinkedDiscountTarget = isMobilePhoneLinkedDiscountTarget;
+    this.productTier = productTier;
   }
   
   public static MobilePhoneResponseDto of(MobilePhone mobilePhone) {
@@ -39,7 +39,7 @@ public class MobilePhoneResponseDto {
         .svcScrbDt(mobilePhone.getSvcScrbDt())
         .feeProdID(mobilePhone.getFeeProduct().getProdId())
         .feeProdNm(mobilePhone.getFeeProduct().getProdNm())
-        .isMobilePhoneLinkedDiscountTarget(mobilePhone.getFeeProduct().isMobilePhoneLinkedDiscountTarget())
+        .productTier(mobilePhone.getFeeProduct().getProductTier().name())
         .build();
   }
 }

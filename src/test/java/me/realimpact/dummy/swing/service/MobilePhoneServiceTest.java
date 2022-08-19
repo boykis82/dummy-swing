@@ -37,9 +37,6 @@ public class MobilePhoneServiceTest {
   @Mock
   ProductRepository productRepository;
 
-  @Mock
-  OlmagoCustomerService olmagoCustomerService;
-
   List<MobilePhone> mobilePhones;
   List<Customer> customers;
   List<Product> products;
@@ -89,7 +86,7 @@ public class MobilePhoneServiceTest {
     assertThat(servicesResponse.get(0).getFeeProdID()).isEqualTo(mobilePhones.get(0).getFeeProduct().getProdId());
     assertThat(servicesResponse.get(0).getFeeProdNm()).isEqualTo(mobilePhones.get(0).getFeeProduct().getProdNm());
     assertThat(servicesResponse.get(0).getSvcScrbDt()).isEqualTo(mobilePhones.get(0).getSvcScrbDt());
-    assertThat(servicesResponse.get(0).isMobilePhoneLinkedDiscountTarget()).isEqualTo(mobilePhones.get(0).getFeeProduct().isMobilePhoneLinkedDiscountTarget());
+    assertThat(servicesResponse.get(0).getProductTier()).isEqualTo(mobilePhones.get(0).getFeeProduct().getProductTier().name());
   }
 
   @Test

@@ -2,9 +2,9 @@ package me.realimpact.dummy.swing.service;
 
 import me.realimpact.dummy.swing.Fixtures;
 import me.realimpact.dummy.swing.domain.*;
+import me.realimpact.dummy.swing.domain.Product.ProductTier;
 import me.realimpact.dummy.swing.proxy.OlmagoProxy;
 import me.realimpact.dummy.swing.util.Util;
-import net.bytebuddy.asm.Advice;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -116,7 +116,7 @@ public class OlmagoCustomerServiceTest {
     given( olmagoCustomerRepository.findBySwingCustomer(any(Customer.class)) )
         .willReturn(Optional.empty());
 
-    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, true);
+    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, ProductTier.HIGHEST);
 
     assertThat(true).isTrue();
   }
@@ -128,7 +128,7 @@ public class OlmagoCustomerServiceTest {
     given( mpocrhRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(testSvc, testOlmagoCust, Util.LocalDateTimeMax) )
         .willReturn(Optional.empty());
 
-    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, true);
+    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, ProductTier.HIGHEST);
 
     assertThat(true).isTrue();
   }
@@ -143,10 +143,10 @@ public class OlmagoCustomerServiceTest {
         .willReturn(Optional.of(testOlmagoCust));
     given( mpocrhRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(testSvc, testOlmagoCust, Util.LocalDateTimeMax) )
         .willReturn(Optional.of(mpocrh));
-    given( olmagoProxy.applyMobilePhoneLinkedDiscount(testOlmagoCust.getOlmagoCustId(), testSvc.getSvcMgmtNum(), true) )
+    given( olmagoProxy.applyMobilePhoneLinkedDiscount(testOlmagoCust.getOlmagoCustId(), testSvc.getSvcMgmtNum(), ProductTier.HIGHEST) )
         .willReturn(Mono.empty());
 
-    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc,true);
+    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, ProductTier.HIGHEST);
 
     assertThat(true).isTrue();
   }

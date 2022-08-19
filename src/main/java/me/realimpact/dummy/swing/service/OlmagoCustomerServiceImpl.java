@@ -1,6 +1,7 @@
 package me.realimpact.dummy.swing.service;
 
 import lombok.NoArgsConstructor;
+import me.realimpact.dummy.swing.domain.Product.ProductTier;
 import me.realimpact.dummy.swing.util.Util;
 import me.realimpact.dummy.swing.domain.*;
 import me.realimpact.dummy.swing.proxy.OlmagoProxy;
@@ -52,13 +53,13 @@ public class OlmagoCustomerServiceImpl implements OlmagoCustomerService {
 
   @Transactional
   @Override
-  public void applyMobilePhoneLinkedDiscount(MobilePhone mps, boolean isMobilePhoneLinkedDiscountTarget) {
+  public void applyMobilePhoneLinkedDiscount(MobilePhone mps, ProductTier productTier) {
     olmagoCustomerRepository.findBySwingCustomer(mps.getCustomer())
         .flatMap(oc -> mobilePhoneOlmagoCustRelHstRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(mps, oc, Util.LocalDateTimeMax))
         .ifPresent(rel -> olmagoProxy.applyMobilePhoneLinkedDiscount(
             rel.getOlmagoCustomer().getOlmagoCustId(),
             rel.getMobilePhone().getSvcMgmtNum(),
-            isMobilePhoneLinkedDiscountTarget
+            productTier
             ).block(Duration.ofSeconds(timeoutSeconds))
         );
   }

@@ -3,6 +3,7 @@ package me.realimpact.dummy.swing.proxy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.realimpact.dummy.swing.domain.Product.ProductTier;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -18,7 +19,7 @@ public class OlmagoProxyImpl implements OlmagoProxy {
   @NoArgsConstructor
   @Data
   static class ApplyMobilePhoneLinkedDiscountDto {
-    boolean isMobilePhoneLinkedDiscountTarget;
+    String productTier;
   }
   
   public OlmagoProxyImpl(WebClient webClient) {
@@ -34,12 +35,12 @@ public class OlmagoProxyImpl implements OlmagoProxy {
   }
   
   @Override
-  public Mono<Void> applyMobilePhoneLinkedDiscount(long olmagoCustomerId, long svcMgmtNum, boolean isMobilePhoneLinkedDiscountTarget) {
+  public Mono<Void> applyMobilePhoneLinkedDiscount(long olmagoCustomerId, long svcMgmtNum, ProductTier productTier) {
     return webClient.put()
         .uri(URL, olmagoCustomerId, svcMgmtNum)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON)
-        .bodyValue(new ApplyMobilePhoneLinkedDiscountDto(isMobilePhoneLinkedDiscountTarget))
+        .bodyValue(new ApplyMobilePhoneLinkedDiscountDto(productTier.name()))
         .retrieve()
         .bodyToMono(Void.class);
   }

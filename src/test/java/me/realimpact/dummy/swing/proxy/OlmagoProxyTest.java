@@ -1,10 +1,10 @@
 package me.realimpact.dummy.swing.proxy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.realimpact.dummy.swing.domain.Product.ProductTier;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.hamcrest.Condition;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class OlmagoProxyTest {
   
   @Test
   public void whenApplyMobilePhoneLinkedDiscount_thenShouldBeOk() throws Exception {
-    OlmagoProxyImpl.ApplyMobilePhoneLinkedDiscountDto body = new OlmagoProxyImpl.ApplyMobilePhoneLinkedDiscountDto(true);
+    OlmagoProxyImpl.ApplyMobilePhoneLinkedDiscountDto body = new OlmagoProxyImpl.ApplyMobilePhoneLinkedDiscountDto(ProductTier.HIGHEST.name());
     mockBackEnd.enqueue(
         new MockResponse()
             .setBody(mapper.writeValueAsString(body))
@@ -59,13 +59,13 @@ public class OlmagoProxyTest {
     
     StepVerifier.create(
         (new OlmagoProxyImpl(WebClient.create(baseUrl)))
-            .applyMobilePhoneLinkedDiscount(1L, 7102112312L, true)
+            .applyMobilePhoneLinkedDiscount(1L, 7102112312L, ProductTier.HIGHEST)
     ).verifyComplete();
     
     RecordedRequest recordedRequest = mockBackEnd.takeRequest();
     assertThat(recordedRequest.getMethod()).isEqualTo("PUT");
     assertThat(recordedRequest.getPath()).isEqualTo("/olmago/api/v1/customer/1/linked-mobile-phone/7102112312");
     String expectedBody = recordedRequest.getBody().readUtf8();
-    assertThat(expectedBody).contains("{\"mobilePhoneLinkedDiscountTarget\":true}");
+    assertThat(expectedBody).contains("{\"productTier\":\"HIGHEST\"}");
   }
 }

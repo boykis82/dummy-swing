@@ -1,10 +1,8 @@
 package me.realimpact.dummy.swing.domain;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.realimpact.dummy.swing.domain.converter.BooleanToYNConverter;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
@@ -17,6 +15,14 @@ import javax.persistence.*;
     name = "zprd_prod"
 )
 public class Product extends BaseEntity {
+  public enum ProductTier {
+    LOWEST,
+    LOW,
+    MEDIUM,
+    HIGH,
+    HIGHEST,
+  }
+  
   @Id
   @Column(name = "prod_id")
   private String prodId;
@@ -26,15 +32,15 @@ public class Product extends BaseEntity {
 
   @Column(nullable = false, name = "prod_nm")
   private String prodNm;
-
-  @Convert(converter = BooleanToYNConverter.class)
-  @Column(name = "mbl_phone_linked_dc_yn")
-  private boolean isMobilePhoneLinkedDiscountTarget;
+  
+  @Column(nullable = false, name = "product_tier")
+  @Enumerated(value = EnumType.STRING)
+  private ProductTier productTier;
 
   @Builder
-  public Product(String prodId, String prodNm, boolean isMobilePhoneLinkedDiscountTarget) {
+  public Product(String prodId, String prodNm, ProductTier productTier) {
     this.prodId = prodId;
     this.prodNm = prodNm;
-    this.isMobilePhoneLinkedDiscountTarget = isMobilePhoneLinkedDiscountTarget;
+    this.productTier = productTier;
   }
 }
