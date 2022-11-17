@@ -1,22 +1,18 @@
 package me.realimpact.dummy.swing.web;
 
+import lombok.RequiredArgsConstructor;
 import me.realimpact.dummy.swing.dto.*;
 import me.realimpact.dummy.swing.service.MobilePhoneService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/swing/api/v1/mobile-phones")
 public class MobilePhoneController {
   private final MobilePhoneService mobilePhoneService;
-  
-  @Autowired
-  public MobilePhoneController(MobilePhoneService mobilePhoneService) {
-    this.mobilePhoneService = mobilePhoneService;
-  }
 
   @GetMapping
   public ResponseEntity<List<MobilePhoneResponseDto>> getMobilePhonesByCI(@RequestParam("ci") String ci) {
@@ -29,6 +25,7 @@ public class MobilePhoneController {
       @RequestBody ChangeOwnerRequestDto reqDto
   ) {
     mobilePhoneService.changeOwner(reqDto);
+
     return ResponseEntity.ok().build();
   }
   

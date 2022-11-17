@@ -16,11 +16,13 @@ import javax.persistence.*;
 )
 public class Product extends BaseEntity {
   public enum ProductTier {
-    LOWEST,
-    LOW,
-    MEDIUM,
-    HIGH,
-    HIGHEST,
+    PLATINUM,
+    PRIME_PLUS,
+    PRIME,
+    MAX,
+    SPECIAL,
+    ZERO_PLAN,
+    LOW
   }
   
   @Id

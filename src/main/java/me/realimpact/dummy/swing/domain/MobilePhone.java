@@ -39,28 +39,42 @@ public class MobilePhone extends BaseEntity {
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "fee_prod_id")
   private Product feeProduct;
+  
+  @Column(name = "dc_uzoopass_prod_cd")
+  private String dcTargetUzoopassProductCode;
 
   @Builder
   private MobilePhone(Customer customer,
                       String svcNum,
                       LocalDate svcScrbDt,
-                      Product feeProduct) {
+                      Product feeProduct,
+                      String dcTargetUzoopassProductCode) {
     this.customer = customer;
     this.svcNum = svcNum;
     this.svcScrbDt = svcScrbDt;
     this.feeProduct = feeProduct;
+    this.dcTargetUzoopassProductCode = dcTargetUzoopassProductCode;
   }
 
   public static MobilePhone subscribe(Customer customer,
                                       String svcNum,
                                       LocalDate svcScrbDt,
-                                      Product feeProduct) {
+                                      Product feeProduct,
+                                      String dcTargetUzoopassProductCode) {
     return MobilePhone.builder()
         .customer(customer)
         .svcNum(svcNum)
         .svcScrbDt(svcScrbDt)
         .feeProduct(feeProduct)
+        .dcTargetUzoopassProductCode(dcTargetUzoopassProductCode)
         .build();
+  }
+  
+  public static MobilePhone subscribe(Customer customer,
+                                      String svcNum,
+                                      LocalDate svcScrbDt,
+                                      Product feeProduct) {
+    return MobilePhone.subscribe(customer, svcNum, svcScrbDt, feeProduct, null);
   }
   
   public void terminate(LocalDateTime termDtm) {

@@ -26,7 +26,7 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class MobilePhoneServiceTest {
   @InjectMocks
-  MobilePhoneServiceImpl olmagoService;
+  MobilePhoneServiceImpl mobilePhoneService;
   
   @Mock
   MobilePhoneRepository mobilePhoneRepository;
@@ -36,6 +36,9 @@ public class MobilePhoneServiceTest {
 
   @Mock
   ProductRepository productRepository;
+  
+  @Mock
+  OlmagoCustomerService olmagoCustomerService;
 
   List<MobilePhone> mobilePhones;
   List<Customer> customers;
@@ -68,7 +71,7 @@ public class MobilePhoneServiceTest {
     given( mobilePhoneRepository.findByCI("77777777777777777777") )
         .willReturn( Collections.emptyList() );
     
-    assertThat( olmagoService.getMobilePhonesByCi("77777777777777777777") ).isEmpty();
+    assertThat( mobilePhoneService.getMobilePhonesByCi("77777777777777777777") ).isEmpty();
   }
   
   @Test
@@ -80,7 +83,7 @@ public class MobilePhoneServiceTest {
     given( mobilePhoneRepository.findByCI("22222222222222222222") )
         .willReturn(mobilePhones);
 
-    List<MobilePhoneResponseDto> servicesResponse = olmagoService.getMobilePhonesByCi("22222222222222222222");
+    List<MobilePhoneResponseDto> servicesResponse = mobilePhoneService.getMobilePhonesByCi("22222222222222222222");
     assertThat(servicesResponse).hasSize(1);
     assertThat(servicesResponse.get(0).getSvcNum()).isEqualTo(mobilePhones.get(0).getSvcNum());
     assertThat(servicesResponse.get(0).getFeeProdID()).isEqualTo(mobilePhones.get(0).getFeeProduct().getProdId());
@@ -99,7 +102,7 @@ public class MobilePhoneServiceTest {
         .willReturn(Optional.of(testCustomer));
     // void method는 given 사용불가. do nothing 이 default. 따라서 given 불필요
 
-    olmagoService.changeOwner(
+    mobilePhoneService.changeOwner(
         ChangeOwnerRequestDto.builder()
             .ownerChangeDateTime(LocalDateTime.now())
             .svcMgmtNum(1L)
@@ -119,7 +122,7 @@ public class MobilePhoneServiceTest {
     given( mobilePhoneRepository.findById(1L) )
         .willReturn(Optional.of(testMobilePhone));
 
-    olmagoService.terminate(
+    mobilePhoneService.terminate(
         TerminateRequestDto.builder()
             .terminatedDateTime(now)
             .svcMgmtNum(1L)
@@ -139,7 +142,7 @@ public class MobilePhoneServiceTest {
     given( productRepository.findById(afterProduct.getProdId()) )
         .willReturn(Optional.of(afterProduct));
 
-    olmagoService.changeFeeProduct(
+    mobilePhoneService.changeFeeProduct(
         ChangeFeeProductRequestDto.builder()
             .svcMgmtNum(testMobilePhone.getSvcMgmtNum())
             .beforeProdId(testMobilePhone.getFeeProduct().getProdId())

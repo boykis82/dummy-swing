@@ -1,0 +1,19 @@
+server.port: 8082
+server.error.include-message: always
+
+logging:
+  level:
+    root: INFO
+    me.realimpact.dummy.swing: DEBUG
+    com:
+      querydsl:
+        sql: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: DEBUG
+
+app:
+  olmago-service:
+    host: localhost
+    port: 8082

@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 
 public interface OlmagoCustomerService {
   void unlinkWithMobilePhoneService(MobilePhone mps, LocalDateTime unlinkDateTime);
-  void applyMobilePhoneLinkedDiscount(MobilePhone mps, ProductTier productTier);
+  void applyMobilePhoneLinkedDiscount(MobilePhone mps);
 }

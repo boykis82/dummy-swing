@@ -1,46 +1,28 @@
 package me.realimpact.dummy.swing.proxy;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import me.realimpact.dummy.swing.domain.Product.ProductTier;
-import org.springframework.http.MediaType;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-// TODO - 김선혁이 URL 정의하면 수정
-
+@RequiredArgsConstructor
 public class OlmagoProxyImpl implements OlmagoProxy {
-  private final static String URL = "/customer/{olmago-customer-id}/linked-mobile-phone/{mobile-phone-svc-mgmt-num}";
-  
-  WebClient webClient;
+  private final WebClient webClient;
 
-  @AllArgsConstructor
-  @NoArgsConstructor
-  @Data
-  static class ApplyMobilePhoneLinkedDiscountDto {
-    String productTier;
-  }
-  
-  public OlmagoProxyImpl(WebClient webClient) {
-    this.webClient = webClient;
-  }
-  
   @Override
-  public Mono<Void> unlinkMobilePhoneService(long olmagoCustomerId, long svcMgmtNum) {
-    return webClient.delete()
-        .uri(URL, olmagoCustomerId, svcMgmtNum)
+  public Mono<Void> unlinkMobilePhoneService(long olmagoCustomerId, MobilePhoneDto dto) {
+    return webClient.put()
+        .uri(uriBuilder -> uriBuilder.path("/customers/{olmago-customer-id}/unlinkMobilePhone").build(olmagoCustomerId))
+        .body(BodyInserters.fromValue(dto))
         .retrieve()
         .bodyToMono(Void.class);
   }
   
   @Override
-  public Mono<Void> applyMobilePhoneLinkedDiscount(long olmagoCustomerId, long svcMgmtNum, ProductTier productTier) {
+  public Mono<Void> applyMobilePhoneLinkedDiscount(long olmagoCustomerId, MobilePhoneDto dto) {
     return webClient.put()
-        .uri(URL, olmagoCustomerId, svcMgmtNum)
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .bodyValue(new ApplyMobilePhoneLinkedDiscountDto(productTier.name()))
+        .uri(uriBuilder -> uriBuilder.path("/customers/{olmago-customer-id}/changeMobilePhonePricePlan").build(olmagoCustomerId))
+        .body(BodyInserters.fromValue(dto))
         .retrieve()
         .bodyToMono(Void.class);
   }

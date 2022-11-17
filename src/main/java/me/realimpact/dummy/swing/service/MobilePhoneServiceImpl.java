@@ -99,6 +99,6 @@ public class MobilePhoneServiceImpl implements MobilePhoneService {
         .orElseThrow(() -> new BusinessException(PRODUCT_NOT_FOUND_BY_EXT_REF, dto.getAfFeeProdId()));
     mps.setFeeProduct(afProd);
 
-    olmagoCustomerService.applyMobilePhoneLinkedDiscount(mps, afProd.getProductTier());
+    olmagoCustomerService.applyMobilePhoneLinkedDiscount(mps);
   }
 }

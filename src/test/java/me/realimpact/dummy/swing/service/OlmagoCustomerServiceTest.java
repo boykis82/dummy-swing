@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -99,7 +100,7 @@ public class OlmagoCustomerServiceTest {
         .willReturn(Optional.of(testOlmagoCust));
     given( mpocrhRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(testSvc, testOlmagoCust, Util.LocalDateTimeMax) )
         .willReturn(Optional.of(mpocrh));
-    given( olmagoProxy.unlinkMobilePhoneService(testOlmagoCust.getOlmagoCustId(), testSvc.getSvcMgmtNum()) )
+    given( olmagoProxy.unlinkMobilePhoneService(eq(testOlmagoCust.getOlmagoCustId()), any()) )
         .willReturn(Mono.empty());
 
     assertThat(mpocrh.getEffStaDtm()).isEqualTo(fiveDaysAgo);
@@ -116,7 +117,7 @@ public class OlmagoCustomerServiceTest {
     given( olmagoCustomerRepository.findBySwingCustomer(any(Customer.class)) )
         .willReturn(Optional.empty());
 
-    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, ProductTier.HIGHEST);
+    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc);
 
     assertThat(true).isTrue();
   }
@@ -128,7 +129,7 @@ public class OlmagoCustomerServiceTest {
     given( mpocrhRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(testSvc, testOlmagoCust, Util.LocalDateTimeMax) )
         .willReturn(Optional.empty());
 
-    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, ProductTier.HIGHEST);
+    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc);
 
     assertThat(true).isTrue();
   }
@@ -143,10 +144,10 @@ public class OlmagoCustomerServiceTest {
         .willReturn(Optional.of(testOlmagoCust));
     given( mpocrhRepository.findRelationHistoryByMobilePhoneAndOlmagoCustomer(testSvc, testOlmagoCust, Util.LocalDateTimeMax) )
         .willReturn(Optional.of(mpocrh));
-    given( olmagoProxy.applyMobilePhoneLinkedDiscount(testOlmagoCust.getOlmagoCustId(), testSvc.getSvcMgmtNum(), ProductTier.HIGHEST) )
+    given( olmagoProxy.applyMobilePhoneLinkedDiscount(eq(testOlmagoCust.getOlmagoCustId()), any()) )
         .willReturn(Mono.empty());
 
-    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc, ProductTier.HIGHEST);
+    olmagoCustomerService.applyMobilePhoneLinkedDiscount(testSvc);
 
     assertThat(true).isTrue();
   }

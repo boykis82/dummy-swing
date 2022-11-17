@@ -21,10 +21,10 @@ public class Fixtures {
   
   public static List<Product> createManyProducts() {
     return List.of(
-            Product.builder().prodId("NA00000001").prodNm("스페셜").productTier(ProductTier.HIGH).build(),
-            Product.builder().prodId("NA00000002").prodNm("플래티넘").productTier(ProductTier.HIGHEST).build(),
-            Product.builder().prodId("NA00000003").prodNm("스몰").productTier(ProductTier.LOWEST).build(),
-            Product.builder().prodId("NA00000004").prodNm("미니").productTier(ProductTier.LOWEST).build()
+            Product.builder().prodId("NA00000001").prodNm("스페셜").productTier(ProductTier.SPECIAL).build(),
+            Product.builder().prodId("NA00000002").prodNm("플래티넘").productTier(ProductTier.PLATINUM).build(),
+            Product.builder().prodId("NA00000003").prodNm("스몰").productTier(ProductTier.LOW).build(),
+            Product.builder().prodId("NA00000004").prodNm("미니").productTier(ProductTier.LOW).build()
     );
   }
   
@@ -42,10 +42,10 @@ public class Fixtures {
   
   public static List<MobilePhoneResponseDto> createManyMobilePhoneResponseDtos() {
     return List.of(
-        MobilePhoneResponseDto.builder().svcMgmtNum(1L).svcNum("1").svcScrbDt(LocalDate.of(2000,1,5)).productTier(ProductTier.HIGH.name()).feeProdID("NA00000001").feeProdNm("플래티넘").build(),
-        MobilePhoneResponseDto.builder().svcMgmtNum(2L).svcNum("2").svcScrbDt(LocalDate.of(2010,2,1)).productTier(ProductTier.HIGHEST.name()).feeProdID("NA00000002").feeProdNm("라지").build(),
-        MobilePhoneResponseDto.builder().svcMgmtNum(3L).svcNum("3").svcScrbDt(LocalDate.of(2020,5,5)).productTier(ProductTier.LOWEST.name()).feeProdID("NA00000003").feeProdNm("스몰").build(),
-        MobilePhoneResponseDto.builder().svcMgmtNum(4L).svcNum("4").svcScrbDt(LocalDate.of(2015,4,3)).productTier(ProductTier.LOWEST.name()).feeProdID("NA00000004").feeProdNm("미니").build()
+        MobilePhoneResponseDto.builder().svcMgmtNum(1L).svcNum("1").svcScrbDt(LocalDate.of(2000,1,5)).productTier(ProductTier.PLATINUM.name()).feeProdID("NA00000001").feeProdNm("플래티넘").build(),
+        MobilePhoneResponseDto.builder().svcMgmtNum(2L).svcNum("2").svcScrbDt(LocalDate.of(2010,2,1)).productTier(ProductTier.SPECIAL.name()).feeProdID("NA00000002").feeProdNm("라지").build(),
+        MobilePhoneResponseDto.builder().svcMgmtNum(3L).svcNum("3").svcScrbDt(LocalDate.of(2020,5,5)).productTier(ProductTier.LOW.name()).feeProdID("NA00000003").feeProdNm("스몰").build(),
+        MobilePhoneResponseDto.builder().svcMgmtNum(4L).svcNum("4").svcScrbDt(LocalDate.of(2015,4,3)).productTier(ProductTier.LOW.name()).feeProdID("NA00000004").feeProdNm("미니").build()
     );
   }
 }

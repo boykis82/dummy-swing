@@ -37,35 +37,36 @@ public class OlmagoProxyTest {
     mockBackEnd.enqueue(new MockResponse()
         .addHeader("Content-Type", "application/json")
     );
+    
+    MobilePhoneDto dto = MobilePhoneDto.builder().svcMgmtNum(7102112312L).build();
   
     StepVerifier.create(
         (new OlmagoProxyImpl(WebClient.create(baseUrl)))
-            .unlinkMobilePhoneService(1L, 7102112312L)
+            .unlinkMobilePhoneService(1L, dto)
     ).verifyComplete();
   
     RecordedRequest recordedRequest = mockBackEnd.takeRequest();
-    assertThat(recordedRequest.getMethod()).isEqualTo("DELETE");
-    assertThat(recordedRequest.getPath()).isEqualTo("/olmago/api/v1/customer/1/linked-mobile-phone/7102112312");
+    assertThat(recordedRequest.getMethod()).isEqualTo("PUT");
+    assertThat(recordedRequest.getPath()).isEqualTo("/olmago/api/v1/customers/1/unlinkMobilePhone");
   }
   
   @Test
   public void whenApplyMobilePhoneLinkedDiscount_thenShouldBeOk() throws Exception {
-    OlmagoProxyImpl.ApplyMobilePhoneLinkedDiscountDto body = new OlmagoProxyImpl.ApplyMobilePhoneLinkedDiscountDto(ProductTier.HIGHEST.name());
+    MobilePhoneDto dto = MobilePhoneDto.builder().svcMgmtNum(7102112312L).mobilePhonePricePlan("PLATINUM").build();
+
     mockBackEnd.enqueue(
         new MockResponse()
-            .setBody(mapper.writeValueAsString(body))
+            .setBody(mapper.writeValueAsString(dto))
             .addHeader("Content-Type", "application/json")
     );
     
     StepVerifier.create(
         (new OlmagoProxyImpl(WebClient.create(baseUrl)))
-            .applyMobilePhoneLinkedDiscount(1L, 7102112312L, ProductTier.HIGHEST)
+            .applyMobilePhoneLinkedDiscount(1L, dto)
     ).verifyComplete();
     
     RecordedRequest recordedRequest = mockBackEnd.takeRequest();
     assertThat(recordedRequest.getMethod()).isEqualTo("PUT");
-    assertThat(recordedRequest.getPath()).isEqualTo("/olmago/api/v1/customer/1/linked-mobile-phone/7102112312");
-    String expectedBody = recordedRequest.getBody().readUtf8();
-    assertThat(expectedBody).contains("{\"productTier\":\"HIGHEST\"}");
+    assertThat(recordedRequest.getPath()).isEqualTo("/olmago/api/v1/customers/1/changeMobilePhonePricePlan");
   }
 }
